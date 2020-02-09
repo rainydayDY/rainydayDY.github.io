@@ -6,16 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>React 学习笔记 | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="目标：学习React基本语法，实现照片墙效果。重温ES6的Class">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 学习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/03/25/react/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="目标：学习React基本语法，实现照片墙效果。重温ES6的Class">
+<meta property="og:image" content="https://doc.react-china.org/static/thinking-in-react-mock-1071fbcc9eed01fddc115b41e193ec11-4dd91.png">
+<meta property="article:published_time" content="2018-03-25T05:53:30.000Z">
+<meta property="article:modified_time" content="2018-03-25T13:22:44.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="ES6">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doc.react-china.org/static/thinking-in-react-mock-1071fbcc9eed01fddc115b41e193ec11-4dd91.png">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
   
@@ -169,317 +175,125 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-react" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      React 学习笔记
+    </h1>
+  
+
+        
+        <a href="/2018/03/25/react/" class="archive-article-date">
+  	<time datetime="2018-03-25T05:53:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-25</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>目标：学习React基本语法，实现照片墙效果。重温ES6的Class</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+
+<p>&nbsp;&nbsp;初学react，和以往不同的是，这次自己学习新语言，入门要比以往迅速许多，学习能力有提升，学习方法也比从前进步，所以，一个人能够收获多少，沉淀多少，都是拜他自己所赐。</p>
+<h2 id="学习前的思考"><a href="#学习前的思考" class="headerlink" title="学习前的思考"></a>学习前的思考</h2><ol>
+<li>我为什么要学React?</li>
+<li>我要花多长时间来学习，并且掌握？</li>
+<li>学完之后我要用它做什么？</li>
+<li>我该用什么途径来提高学习它的效率？</li>
+</ol>
+<h2 id="学习过程"><a href="#学习过程" class="headerlink" title="学习过程"></a>学习过程</h2><ol>
+<li>首先看<a href="https://doc.react-china.org/docs/hello-world.html" target="_blank" rel="noopener">文档</a>，官方的文档是英文的，要想快速的完成，英文阅读理解能力不强的话，就去找中文的，如果中途遇到晦涩难懂的中文翻译，自己去翻译英文可能会更容易理解。</li>
+<li>学习过程不能光看，最好是把示例代码自己敲一遍然后运行一遍。</li>
+<li>在慕课上找一些视频来看，不要看入门级的，找成品来看，一方面可以收获实现某种效果的思路，另一方面还能运用新学语言，看思路就好。</li>
+<li>去github上找一些star多的demo。</li>
+<li>多练习，多运行，多查。</li>
+</ol>
+<h2 id="语法总结"><a href="#语法总结" class="headerlink" title="语法总结"></a>语法总结</h2><h4 id="定义组件-amp-amp-ES6-class"><a href="#定义组件-amp-amp-ES6-class" class="headerlink" title="定义组件 &amp;&amp; ES6 class"></a>定义组件 &amp;&amp; ES6 class</h4><p>参考：<a href="http://es6.ruanyifeng.com/#docs/class-extends" target="_blank" rel="noopener">ES6 Class 继承</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ComponentName</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props)&#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line">    <span class="comment">// 类的方法默认是不会绑定this的</span></span><br><span class="line">    <span class="keyword">this</span>.handleClick = <span class="keyword">this</span>.handleClick.bind(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// 定义state</span></span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      stateValue: <span class="string">''</span></span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="comment">// 定义class中所需的变量</span></span><br><span class="line">    <span class="keyword">this</span>.Constant = &#123;</span><br><span class="line">      info: &#123;</span><br><span class="line">        left: <span class="string">''</span> ,</span><br><span class="line">        top: <span class="string">''</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handleClick(e)&#123;</span><br><span class="line">    e.preventDefault();</span><br><span class="line">    e.stopPropagation();</span><br><span class="line">    <span class="built_in">console</span>.log(e.target.value);</span><br><span class="line">    <span class="built_in">console</span>.log(e.target.nodeName);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handleChange(index,e)&#123;</span><br><span class="line">    <span class="comment">// 事件对象e要排在所传递参数的后面</span></span><br><span class="line">    <span class="built_in">console</span>.log(index)</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">      stateValue: index</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount()&#123;</span><br><span class="line">    <span class="comment">// DOM渲染完成</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render()&#123;</span><br><span class="line">    <span class="keyword">const</span> propValue = <span class="keyword">this</span>.props.value;</span><br><span class="line">    <span class="keyword">const</span> stateValue = <span class="keyword">this</span>.state.stateValue;</span><br><span class="line">    <span class="keyword">const</span> listItems = propValue.map(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 列表渲染需要指定唯一的key值</span></span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;this.handleChange.bind(this,index)&#125;</span>&gt;</span>&#123;item.name&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"out-wrapper"</span>&gt;</span><br><span class="line">          &lt;a onClick=&#123;<span class="keyword">this</span>.handleClick&#125;&gt;&#123;stateValue&#125;&lt;<span class="regexp">/a&gt;</span></span><br><span class="line"><span class="regexp">          &lt;div&gt;&#123;listItems&#125;&lt;/</span>div&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>super()表示父类的构造函数，用来新建父类的this对象，因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工，如果不调用super()方法，子类就得不到this对象。</li>
+<li>事件绑定this</li>
+<li>列表渲染，key值一定存在</li>
+<li>state &amp;&amp; props 区别：前者可以变，但是需要通过setState()的方式改变，后者不可在子组件中更改，数据为单向传递。</li>
+</ol>
+<h2 id="实现官方文档中的示例"><a href="#实现官方文档中的示例" class="headerlink" title="实现官方文档中的示例"></a>实现官方文档中的示例</h2><h4 id="UI效果如下："><a href="#UI效果如下：" class="headerlink" title="UI效果如下："></a>UI效果如下：</h4><p><img src="https://doc.react-china.org/static/thinking-in-react-mock-1071fbcc9eed01fddc115b41e193ec11-4dd91.png" alt="UI效果"></p>
+<h4 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h4><ol>
+<li>划分组件层级</li>
+<li>用React创建静态DOM结构</li>
+<li>抽离出组件</li>
+<li>确定state和props</li>
+<li>反响数据流</li>
+</ol>
+<h4 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h4><h5 id="数据mock"><a href="#数据mock" class="headerlink" title="数据mock"></a>数据mock</h5><p>最近新发现了一种非常方便的mock数据的方式，<a href="https://easy-mock.com/project/5aaf5c724208430f514c6e4c" target="_blank" rel="noopener">Easy Mock</a>,在后端没有给你提供API 的时候，你可以自己去模拟数据，但是手动创建数据太麻烦了，使用这个可以自己定义接口，请求方式，然后会生成可以请求的url，mock规则的<a href="https://github.com/nuysoft/Mock/wiki/Syntax-Specification" target="_blank" rel="noopener">语法规范</a>，熟悉了之后再去创建数据，非常方便。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> resultList = [</span><br><span class="line">&#123;<span class="attr">category</span>: <span class="string">"Sporting Goods"</span>, <span class="attr">price</span>: <span class="string">"$49.99"</span>, <span class="attr">stocked</span>: <span class="literal">true</span>, <span class="attr">name</span>: <span class="string">"Football"</span>&#125;,</span><br><span class="line">&#123;<span class="attr">category</span>: <span class="string">"Sporting Goods"</span>, <span class="attr">price</span>: <span class="string">"$9.99"</span>, <span class="attr">stocked</span>: <span class="literal">true</span>, <span class="attr">name</span>: <span class="string">"Baseball"</span>&#125;,</span><br><span class="line">&#123;<span class="attr">category</span>: <span class="string">"Sporting Goods"</span>, <span class="attr">price</span>: <span class="string">"$29.99"</span>, <span class="attr">stocked</span>: <span class="literal">false</span>, <span class="attr">name</span>: <span class="string">"Basketball"</span>&#125;,</span><br><span class="line">&#123;<span class="attr">category</span>: <span class="string">"Electronics"</span>, <span class="attr">price</span>: <span class="string">"$99.99"</span>, <span class="attr">stocked</span>: <span class="literal">true</span>, <span class="attr">name</span>: <span class="string">"iPod Touch"</span>&#125;,</span><br><span class="line">&#123;<span class="attr">category</span>: <span class="string">"Electronics"</span>, <span class="attr">price</span>: <span class="string">"$399.99"</span>, <span class="attr">stocked</span>: <span class="literal">false</span>, <span class="attr">name</span>: <span class="string">"iPhone 5"</span>&#125;,</span><br><span class="line">&#123;<span class="attr">category</span>: <span class="string">"Electronics"</span>, <span class="attr">price</span>: <span class="string">"$199.99"</span>, <span class="attr">stocked</span>: <span class="literal">true</span>, <span class="attr">name</span>: <span class="string">"Nexus 7"</span>&#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<h5 id="创建第一个组件：最外层组件"><a href="#创建第一个组件：最外层组件" class="headerlink" title="创建第一个组件：最外层组件"></a>创建第一个组件：最外层组件</h5><p>&nbsp;&nbsp;组件的划分：最外层父组件、用户可操作部分（输入框和单选框）、渲染结果组件。子组件SearchBar接收用户操作，然后触发父组件的自定义事件onSearchChange，返回值再传递给渲染结果的列表组件Productable进行数据过滤。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FilterTable</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"> <span class="keyword">constructor</span>(props)&#123;</span><br><span class="line">   <span class="keyword">super</span>(props)</span><br><span class="line">   <span class="keyword">this</span>.handleChange = <span class="keyword">this</span>.handleChange.bind(<span class="keyword">this</span>)</span><br><span class="line">   <span class="keyword">this</span>.state = &#123;</span><br><span class="line">     searchValue: <span class="string">''</span>,</span><br><span class="line">     isCheck: <span class="literal">false</span></span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> handleChange(name,targetValue)&#123;</span><br><span class="line">   <span class="keyword">if</span>(name === <span class="string">'input'</span>)&#123;</span><br><span class="line">     <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">       searchValue: targetValue</span><br><span class="line">     &#125;)</span><br><span class="line">   &#125;<span class="keyword">else</span> <span class="keyword">if</span> (name === <span class="string">'checkbox'</span>) &#123;</span><br><span class="line">     <span class="keyword">this</span>.setState(<span class="function"><span class="params">prevState</span> =&gt;</span> (&#123;</span><br><span class="line">       isCheck: !prevState.isCheck</span><br><span class="line">     &#125;))</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> render()&#123;</span><br><span class="line">   <span class="keyword">return</span> (</span><br><span class="line">     &lt;div className=<span class="string">"out-wrap"</span>&gt;</span><br><span class="line">       &lt;SearchBar searchValue=&#123;<span class="keyword">this</span>.state.searchValue&#125; isCheck=&#123;<span class="keyword">this</span>.state.isCheck&#125; onSearchChange=&#123;<span class="keyword">this</span>.handleChange&#125;/&gt;</span><br><span class="line">       &lt;Productable searchValue=&#123;<span class="keyword">this</span>.state.searchValue&#125; isCheck=&#123;<span class="keyword">this</span>.state.isCheck&#125; /&gt;</span><br><span class="line">     &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">   )</span></span><br><span class="line"><span class="regexp"> &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h5 id="用户可操作部分组件SearchBar"><a href="#用户可操作部分组件SearchBar" class="headerlink" title="用户可操作部分组件SearchBar"></a>用户可操作部分组件SearchBar</h5><p>&nbsp;&nbsp;由于无论是输入框还是复选框，触发的事件都是onChange事件，所以用name区分，用一个方法处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SearchBar</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"> <span class="keyword">constructor</span>(props)&#123;</span><br><span class="line">   <span class="keyword">super</span>(props)</span><br><span class="line">   <span class="keyword">this</span>.handleChange = <span class="keyword">this</span>.handleChange.bind(<span class="keyword">this</span>)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> handleChange(e)&#123;</span><br><span class="line">   <span class="keyword">if</span>(e.target.name === <span class="string">'input'</span>)&#123;</span><br><span class="line">     <span class="keyword">this</span>.props.onSearchChange(e.target.name, e.target.value)</span><br><span class="line">   &#125;<span class="keyword">else</span> <span class="keyword">if</span> (e.target.name === <span class="string">'checkbox'</span>) &#123;</span><br><span class="line">     <span class="keyword">this</span>.props.onSearchChange(e.target.name, e.target.checked)</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> render()&#123;</span><br><span class="line">   <span class="keyword">return</span> (</span><br><span class="line">     &lt;div&gt;</span><br><span class="line">     &lt;input type=<span class="string">"text"</span> value=&#123;<span class="keyword">this</span>.props.searchValue&#125; name=<span class="string">"input"</span> onChange=&#123;<span class="keyword">this</span>.handleChange&#125;/&gt;</span><br><span class="line">     &lt;div&gt;</span><br><span class="line">     &lt;input type=<span class="string">"checkbox"</span> name=<span class="string">"checkbox"</span> checked=&#123;<span class="keyword">this</span>.props.isCheck&#125; onChange=&#123;<span class="keyword">this</span>.handleChange&#125; /&gt;<span class="xml"><span class="tag">&lt;<span class="name">label</span>&gt;</span>only show products in stock<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line">     &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">     &lt;/</span>div&gt;</span><br><span class="line">   )</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="结果列表组件-Productable"><a href="#结果列表组件-Productable" class="headerlink" title="结果列表组件 Productable"></a>结果列表组件 Productable</h5><p>&nbsp;&nbsp;筛选出商品名称匹配用户搜索关键字、并且是否有库存匹配用户对复选框的勾选，此处用到ES6的<a href="http://es6.ruanyifeng.com/#docs/string#includes-startsWith-endsWith" target="_blank" rel="noopener">字符串includes</a>和<a href="http://es6.ruanyifeng.com/#docs/array#%E6%95%B0%E7%BB%84%E5%AE%9E%E4%BE%8B%E7%9A%84-find-%E5%92%8C-findIndex" target="_blank" rel="noopener">数组的includes</a>；由于类别不确定有多少，所以需要把类别也要存入数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Productable</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"> <span class="keyword">constructor</span>(props)&#123;</span><br><span class="line">   <span class="keyword">super</span>(props)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> render() &#123;</span><br><span class="line">   <span class="keyword">const</span> categoryArray = []</span><br><span class="line">   <span class="keyword">const</span> listItems = []</span><br><span class="line">   <span class="keyword">const</span> searchValue = <span class="keyword">this</span>.props.searchValue,</span><br><span class="line">         isCheck = <span class="keyword">this</span>.props.isCheck;         </span><br><span class="line">   resultList.forEach(<span class="function">(<span class="params">item,index</span>)=&gt;</span>&#123;</span><br><span class="line">     <span class="keyword">if</span>((searchValue &amp;&amp; item.name.includes(searchValue)) || (isCheck &amp;&amp; item.stocked))&#123;</span><br><span class="line">       <span class="keyword">if</span>(categoryArray.includes(item.category))&#123;</span><br><span class="line">         categoryArray.push(item.category)</span><br><span class="line">         listItems.push(<span class="xml"><span class="tag">&lt;<span class="name">CategoryRow</span> <span class="attr">category</span>=<span class="string">&#123;item.category&#125;</span> <span class="attr">key</span>=<span class="string">&#123;item.category&#125;/</span>&gt;</span></span>)</span><br><span class="line">       &#125;</span><br><span class="line">       listItems.push(<span class="xml"><span class="tag">&lt;<span class="name">ProductRow</span> <span class="attr">name</span>=<span class="string">&#123;item.name&#125;</span> <span class="attr">price</span>=<span class="string">&#123;item.price&#125;</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;/</span>&gt;</span></span>)</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;)</span><br><span class="line">   <span class="keyword">return</span> (</span><br><span class="line">     &lt;div&gt;</span><br><span class="line">     &lt;div className=<span class="string">"column-line"</span>&gt;</span><br><span class="line">     &lt;span&gt;Name&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">     &lt;span&gt;Price&lt;/</span>span&gt;</span><br><span class="line">     &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">     &#123;listItems&#125;</span></span><br><span class="line"><span class="regexp">     &lt;/</span>div&gt;</span><br><span class="line">   )</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="类别标题组件"><a href="#类别标题组件" class="headerlink" title="类别标题组件"></a>类别标题组件</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CategoryRow</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"> <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">   <span class="keyword">super</span>(props)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> render()&#123;</span><br><span class="line">   <span class="keyword">return</span> (</span><br><span class="line">     &lt;h3&gt;&#123;<span class="keyword">this</span>.props.category&#125;&lt;<span class="regexp">/h3&gt;</span></span><br><span class="line"><span class="regexp">   )</span></span><br><span class="line"><span class="regexp"> &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h5 id="产品结果组件"><a href="#产品结果组件" class="headerlink" title="产品结果组件"></a>产品结果组件</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductRow</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"> <span class="keyword">constructor</span>(props)&#123;</span><br><span class="line">   <span class="keyword">super</span>(props)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">render()&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div className=<span class="string">"column-line"</span>&gt;</span><br><span class="line">    &lt;span&gt;&#123;<span class="keyword">this</span>.props.name&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">    &lt;span&gt;&#123;this.props.price&#125;&lt;/</span>span&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h5 id="最后，渲染。"><a href="#最后，渲染。" class="headerlink" title="最后，渲染。"></a>最后，渲染。</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> element = (</span><br><span class="line">  &lt;FilterTable/&gt;</span><br><span class="line">)</span><br><span class="line">ReactDOM.render(element,<span class="built_in">document</span>.getElementById(<span class="string">'root'</span>))</span><br></pre></td></tr></table></figure>
+<p>在React理念这一节中，构建应用可以选择自顶向下构建，也可以选择自顶向上构建，因为这个示例比较小，所以自顶向下很容易。</p>
+<hr>
+<p>获取真实的DOM节点：ReactDOM.findDOMNode(this.refs.)</p>
+<h2 id="组件的生命周期"><a href="#组件的生命周期" class="headerlink" title="组件的生命周期"></a>组件的生命周期</h2><h4 id="组件实例被创建和插入DOM时调用"><a href="#组件实例被创建和插入DOM时调用" class="headerlink" title="组件实例被创建和插入DOM时调用"></a>组件实例被创建和插入DOM时调用</h4><ol>
+<li>constructor()</li>
+<li>componentWillMount()</li>
+<li>render()</li>
+<li>componentDidMount<h4 id="组件更新时使用"><a href="#组件更新时使用" class="headerlink" title="组件更新时使用"></a>组件更新时使用</h4></li>
+<li>componentWillReceiveProps()</li>
+<li>shouldComponentUpdate()</li>
+<li>componentWillUpdate()</li>
+<li>render()</li>
+<li>componentDidUpdate()<h4 id="组件卸载"><a href="#组件卸载" class="headerlink" title="组件卸载"></a>组件卸载</h4>componentWillUnmount()</li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -489,13 +303,13 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ES6</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -508,20 +322,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/25/react/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2018/03/31/node/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          node js 爬取小说并插入数据库
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2018/03/18/vue+vuex+vue-router%E5%AE%9E%E7%8E%B0%E7%99%BB%E5%BD%95%E6%B5%81%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">vue实现登录流程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#学习前的思考"><span class="toc-number">1.</span> <span class="toc-text">学习前的思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习过程"><span class="toc-number">2.</span> <span class="toc-text">学习过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#语法总结"><span class="toc-number">3.</span> <span class="toc-text">语法总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#定义组件-amp-amp-ES6-class"><span class="toc-number">3.0.1.</span> <span class="toc-text">定义组件 &amp;&amp; ES6 class</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现官方文档中的示例"><span class="toc-number">4.</span> <span class="toc-text">实现官方文档中的示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UI效果如下："><span class="toc-number">4.0.1.</span> <span class="toc-text">UI效果如下：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤："><span class="toc-number">4.0.2.</span> <span class="toc-text">步骤：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实现："><span class="toc-number">4.0.3.</span> <span class="toc-text">实现：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#数据mock"><span class="toc-number">4.0.3.1.</span> <span class="toc-text">数据mock</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建第一个组件：最外层组件"><span class="toc-number">4.0.3.2.</span> <span class="toc-text">创建第一个组件：最外层组件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#用户可操作部分组件SearchBar"><span class="toc-number">4.0.3.3.</span> <span class="toc-text">用户可操作部分组件SearchBar</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#结果列表组件-Productable"><span class="toc-number">4.0.3.4.</span> <span class="toc-text">结果列表组件 Productable</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#类别标题组件"><span class="toc-number">4.0.3.5.</span> <span class="toc-text">类别标题组件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#产品结果组件"><span class="toc-number">4.0.3.6.</span> <span class="toc-text">产品结果组件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#最后，渲染。"><span class="toc-number">4.0.3.7.</span> <span class="toc-text">最后，渲染。</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组件的生命周期"><span class="toc-number">5.</span> <span class="toc-text">组件的生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#组件实例被创建和插入DOM时调用"><span class="toc-number">5.0.1.</span> <span class="toc-text">组件实例被创建和插入DOM时调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#组件更新时使用"><span class="toc-number">5.0.2.</span> <span class="toc-text">组件更新时使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#组件卸载"><span class="toc-number">5.0.3.</span> <span class="toc-text">组件卸载</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="react" data-title="React 学习笔记" data-url="http://yoursite.com/2018/03/25/react/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+  
+  
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +484,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

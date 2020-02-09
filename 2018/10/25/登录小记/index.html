@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>登录小记 | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求描述：理解单点登录、登录、以及cookie的使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="登录小记">
+<meta property="og:url" content="http://yoursite.com/2018/10/25/%E7%99%BB%E5%BD%95%E5%B0%8F%E8%AE%B0/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求描述：理解单点登录、登录、以及cookie的使用">
+<meta property="article:published_time" content="2018-10-25T08:38:57.000Z">
+<meta property="article:modified_time" content="2018-12-21T04:28:02.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="cookie">
+<meta property="article:tag" content="single sign on">
+<meta property="article:tag" content="token">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
@@ -169,83 +174,115 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-登录小记" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      登录小记
+    </h1>
+  
+
+        
+        <a href="/2018/10/25/%E7%99%BB%E5%BD%95%E5%B0%8F%E8%AE%B0/" class="archive-article-date">
+  	<time datetime="2018-10-25T08:38:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-25</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求描述：理解单点登录、登录、以及cookie的使用</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+
+<h2 id="维持登录态的几种方式"><a href="#维持登录态的几种方式" class="headerlink" title="维持登录态的几种方式"></a>维持登录态的几种方式</h2><h3 id="传统身份验证的方法"><a href="#传统身份验证的方法" class="headerlink" title="传统身份验证的方法"></a>传统身份验证的方法</h3><p>HTTP 是一种没有状态的协议，也就是它并不知道是谁访问应用。这里我们把用户看成是客户端，客户端使用用户名还有密码通过了身份验证，不过下回这个客户端再发送请求时候，还得再验证一下。</p>
+<p>解决的方法就是，当用户请求登录的时候，如果没有问题，我们在服务端生成一条记录，这个记录里可以说明一下登录的用户是谁，然后把这条记录的 ID 号发送给客户端，客户端收到以后把这个 ID 号存储在 Cookie 里，下次这个用户再向服务端发送请求的时候，可以带着这个 Cookie ，这样服务端会验证一下这个 Cookie 里的信息，看看能不能在服务端这里找到对应的记录，如果可以，说明用户已经通过了身份验证，就把用户请求的数据返回给客户端。</p>
+<p>上面说的就是 Session，我们需要在服务端存储为登录的用户生成的 Session ，这些 Session 可能会存储在内存，磁盘，或者数据库里。我们可能需要在服务端定期的去清理过期的 Session 。</p>
+<h3 id="基于-Token-的身份验证方法"><a href="#基于-Token-的身份验证方法" class="headerlink" title="基于 Token 的身份验证方法"></a>基于 Token 的身份验证方法</h3><p>使用基于 Token 的身份验证方法，在服务端不需要存储用户的登录记录。大概的流程是这样的：</p>
+<p>1、客户端使用用户名跟密码请求登录<br>2、服务端收到请求，去验证用户名与密码<br>3、验证成功后，服务端会签发一个 Token，再把这个 Token 发送给客户端<br>4、客户端收到 Token 以后可以把它存储起来，比如放在 Cookie 里或者 Local Storage 里<br>5、客户端每次向服务端请求资源的时候需要带着服务端签发的 Token<br>6、服务端收到请求，然后去验证客户端请求里面带着的 Token，如果验证成功，就向客户端返回请求的数据</p>
+<h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><h3 id="Cookie种类"><a href="#Cookie种类" class="headerlink" title="Cookie种类"></a>Cookie种类</h3><p>1、临时Cookie（会话Cookie）<br>2、永久Cookie</p>
+<p>cookie分为两种，一种是硬盘上的，另一种是内存上的，一个网站通常有一个.txt文件来存Cookies，一个Cookie对象最终转换为txt文件中的一条记录。保存在浏览器线程分配的内存中的Cookie对象，在关闭这个浏览器窗口后，就销毁了。导致种类不同是过期时间的设置与否决定的，如果设置了过期时间，那么就会在过期时间未到前一直生效，请求会被携带，除非服务端设置了max-age强制使其失效；而没有设置过期时间，cookie的生命周期只存在于浏览器会话期间，关闭窗口，cookie即消失。</p>
+<h3 id="Cookie被携带的条件"><a href="#Cookie被携带的条件" class="headerlink" title="Cookie被携带的条件"></a>Cookie被携带的条件</h3><p>同一域名下，存在cookie，浏览器会默认自动发送Cookie给对应的服务器。<br>普通的ajax(json)请求和jsop跨域请求是默认携带cookie的，而cors跨域请求和fetch请求默认是不携带cookie的。因此，当我们的请求需要携带cookie时，我们就要对cors跨域请求和fetch请求这两中请求方式进行特殊配置处理。<br>通常我们使用的axios库，也是对XMLHttpRequest这个对象的封装，和ajax请求无异，因为加入了promise，解决了回调的问题。<br>而fetch请求如果想携带cookie，需要设置header里面的参数，加上credientials: ‘include’；<br>CORS的方式想要携带cookie，需要设置如下设置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// aixos为例</span></span><br><span class="line"><span class="keyword">const</span> service = axios.create(&#123;</span><br><span class="line">        baseURL: process.env.BASE_API, <span class="comment">// node环境的不同，对应不同的baseURL</span></span><br><span class="line">        timeout: <span class="number">30000</span>, <span class="comment">// 请求的超时时间</span></span><br><span class="line">        withCredentials: <span class="literal">true</span> <span class="comment">// 允许携带cookie</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="设置Cookie的方式"><a href="#设置Cookie的方式" class="headerlink" title="设置Cookie的方式"></a>设置Cookie的方式</h3><p>1、后端设置set-cookie，这种情况下，前端什么也不需要做。相当于服务器端给浏览器发送指令，浏览器自动注入cookie，每次请求都携带cookie信息；<br>2、前端收到后端返回的信息，设置cookie；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setDomainCookie</span>(<span class="params">name, value, expiresDays = <span class="number">60</span>, host</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> date = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    date.setTime(date.getTime() + expiresDays * <span class="number">24</span> * <span class="number">3600</span> * <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">const</span> expires = <span class="string">`expires=<span class="subst">$&#123;date.toGMTString()&#125;</span>;`</span>;</span><br><span class="line">    host</span><br><span class="line">        ? <span class="string">''</span></span><br><span class="line">        : (host = <span class="built_in">window</span>.location.hostname</span><br><span class="line">            .split(<span class="string">'.'</span>)</span><br><span class="line">            .slice(<span class="number">-2</span>)</span><br><span class="line">            .join(<span class="string">'.'</span>));</span><br><span class="line">    <span class="keyword">const</span> domain = <span class="string">`domain=<span class="subst">$&#123;host&#125;</span>;`</span>;</span><br><span class="line">    <span class="built_in">window</span>.document.cookie = <span class="string">`<span class="subst">$&#123;name&#125;</span>=<span class="subst">$&#123;value&#125;</span>;<span class="subst">$&#123;expires&#125;</span><span class="subst">$&#123;domain&#125;</span>path=/`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Cookie-分析-amp-amp-总结"><a href="#Cookie-分析-amp-amp-总结" class="headerlink" title="Cookie 分析 &amp;&amp; 总结"></a>Cookie 分析 &amp;&amp; 总结</h3><p>1、cookie信息自动被请求携带，不限于请求后端数据的请求，即使是刷新页面，图片，css，js，也都会携带本地的cookie信息，这无疑相当于浪费了请求头的资源；<br>2、cookie是不允许跨域传输的，所以在本地localhost发送的请求是不会被携带到请求头里的，这样就会有问题，如果很多请求都需要验证权限，而开发环境又无法携带cookie信息，就会带来联调上的困难；<br>3、cookie中能够存储的数据有限，不同的浏览器限制大小不一样。</p>
+<p>综上，在实现自动登录时，前端收到服务端返回的token，可以存到localstorage里，然后塞入请求头中，所有对于数据的请求都会携带此头部字段，虽然localstorage没有过期这一概念，我们可以自己手动设置，每次发送请求前都判断一遍是否过期，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存入</span></span><br><span class="line"><span class="keyword">if</span> (cacheParams.cacheTime &lt; <span class="number">0</span>) cacheParams.cacheTime = <span class="number">3600000</span>;</span><br><span class="line"><span class="keyword">var</span> result = &#123; <span class="attr">data</span>: response.data, <span class="attr">expiration</span>: <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() + cacheParams.cacheTime &#125;;</span><br><span class="line">localStorage.setItem(cacheParams.cacheName, <span class="built_in">JSON</span>.stringify(result));</span><br><span class="line"><span class="comment">// 取出判断</span></span><br><span class="line"><span class="keyword">const</span> data = <span class="built_in">JSON</span>.parse(data);</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">parseInt</span>(data.expiration) - <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() &lt;= <span class="number">3000</span>) &#123;</span><br><span class="line">    <span class="comment">// 说明已过期，做相应处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置请求头：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以axios实例为例</span></span><br><span class="line"> netApi.interceptors.request.use(<span class="function">(<span class="params">request</span>) =&gt;</span> &#123;</span><br><span class="line">    removePending(request); <span class="comment">// 在一个ajax发送前执行一下取消操作</span></span><br><span class="line">    config.cancelToken = <span class="keyword">new</span> APICancelToken(<span class="function">(<span class="params">c</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里的ajax标识我是用请求地址&amp;请求方式拼接的字符串，当然你可以选择其他的一些方式</span></span><br><span class="line">    pending.push(&#123; <span class="attr">u</span>: <span class="string">`<span class="subst">$&#123;request.url&#125;</span>&amp;<span class="subst">$&#123;request.method&#125;</span>`</span>, <span class="attr">f</span>: c &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">if</span> (readLocalStorage(<span class="string">'X-Token'</span>)) &#123;</span><br><span class="line">        request.headers.token = readLocalStorage(<span class="string">'X-Token'</span>); <span class="comment">// 携带token</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> request;</span><br><span class="line">&#125;, error =&gt; <span class="built_in">Promise</span>.reject(error));</span><br></pre></td></tr></table></figure>
+<p>题外记，如果存有登录信息的cookie文件，被复制到另一台设备的指定目录下，去访问这个cookie对应的网站，是不是也能正常访问呢？<br>我的理解是可以的，或者换一种方式，我的设备上的cookie信息被劫持了，然后被用来登录我使用的网站了，是不是意味着这个人在行驶着我的权力，理论上是，可是现在的安全防范策略那么多，能够存到cookie里的信息未必是最重要的明文信息，所以即使被劫持了也影响不大。</p>
+<h2 id="单点登录"><a href="#单点登录" class="headerlink" title="单点登录"></a>单点登录</h2><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>单点登录是一种控制多个相关但彼此独立的系统的访问权限，拥有这一权限的用户可以使用单一的id和密码访问一个或者多个系统而避免使用不同的用户名或密码，或者通过某种配置无缝的登录某个系统。</p>
+<p>单系统登录的核心是使用cookie，但是上面讲到，cookie是有限制的，浏览器发送http请求时会自动携带与该域匹配的cookie，而不是所有cookie，既然这样，为什么不将web应用群中所有子系统的域名统一在一个顶级域名下，例如“*.baidu.com”，然后将它们的cookie域设置为“baidu.com”，这种做法理论上是可以的，甚至早期很多多系统登录就采用这种同域名共享cookie的方式。</p>
+<p>然而，可行并不代表好，共享cookie的方式存在众多局限。首先，应用群域名得统一；其次，应用群各系统使用的技术（至少是web服务器）要相同，不然cookie的key值（tomcat为JSESSIONID）不同，无法维持会话，共享cookie的方式是无法实现跨语言技术平台登录的，比如java、php、.net系统之间；第三，cookie本身不安全。</p>
+<p>因此，我们需要一种全新的登录方式来实现多系统应用群的登录，这就是单点登录。</p>
+<p>相比于单系统登录，sso需要一个独立的认证中心，只有认证中心能接受用户的用户名密码等安全信息，其他系统不提供登录入口，只接受认证中心的间接授权。间接授权通过令牌实现，sso认证中心验证用户的用户名密码没问题，创建授权令牌，在接下来的跳转过程中，授权令牌作为参数发送给各个子系统，子系统拿到令牌，即得到了授权，可以借此创建局部会话，局部会话登录方式与单系统的登录方式相同。</p>
+<p>所有系统（可能是不同域下的系统）共享一份相同的已验证的、安全可靠的信息。即SSO系统让不同Domain拥有一份相同的cookie，当用户访问A系统时，在A系统验证成功后，在其域下设置一份cookie，当访问B系统时，再跳回SSO，然后在B所处的域下复制一份cookie。结果就是，我访问A，A进行验证，验证失败，跳转至SSO，要求我登录，我通过SSO登录，SSO验证成功后生成sessinID，随后将UserInfo（ SessionID、ID和口令）存储到公共缓存C 中，跳转至A（携带SessionID），并允许我访问A；我保存UserInfo （ SessionID ） 至 cookie；<br>我访问B，B进行验证，失败跳转至SSO，SSO将触发我请求SSO将验证信息随请求一并发给SSO，经SSO验证成功跳转至B，允许我对B 的访问；使我保存UserInfo（ SessionID）至cookie；<br>问题：（不同域下，请求B系统的验证信息从哪里来？据说是放在顶级域名下的。）</p>
+<p>（实际上，我对单点登录只是有一个模糊的概念，后续学习，会继续更新）<br>欢迎指正！</p>
+<h2 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h2><p>1、<a href="https://blog.csdn.net/nnxxyy1111/article/details/80832525" target="_blank" rel="noopener">React16新的生命周期函数getDerivedStateFromProps的使用，你也许并不需要派生状态【译】</a><br>2、<a href="https://www.cnblogs.com/wxinyu/p/8005621.html" target="_blank" rel="noopener">HTTP–Request Headers及Cookies</a><br>3、<a href="https://blog.csdn.net/sundacheng1989/article/details/8194466" target="_blank" rel="noopener">状态保持中的Cookie与Session</a><br>4、<a href="https://www.cnblogs.com/loveis715/p/4592246.html" target="_blank" rel="noopener">CORS简介</a><br>5、<a href="https://segmentfault.com/a/1190000011811117?utm_source=tag-newest" target="_blank" rel="noopener">axios的cookie跨域以及相关配置</a><br>6、<a href="https://www.cnblogs.com/EzrealLiu/p/5559255.html" target="_blank" rel="noopener">漫谈单点登录（SSO）</a><br>7、<a href="https://www.cnblogs.com/ywlaker/p/6113927.html" target="_blank" rel="noopener">单点登录原理与简单实现</a><br>8、<a href="http://www.cnblogs.com/baibaomen/p/sso.html" target="_blank" rel="noopener">单点登录SSO：概述与示例</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">cookie</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">single sign on</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">token</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +295,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/10/25/%E7%99%BB%E5%BD%95%E5%B0%8F%E8%AE%B0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/11/09/%E9%85%8D%E7%BD%AEhosts%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          配置hosts文件相关
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/10/24/post%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">post提交数据的四种编码方式</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#维持登录态的几种方式"><span class="toc-number">1.</span> <span class="toc-text">维持登录态的几种方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#传统身份验证的方法"><span class="toc-number">1.1.</span> <span class="toc-text">传统身份验证的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于-Token-的身份验证方法"><span class="toc-number">1.2.</span> <span class="toc-text">基于 Token 的身份验证方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cookie"><span class="toc-number">2.</span> <span class="toc-text">Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie种类"><span class="toc-number">2.1.</span> <span class="toc-text">Cookie种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie被携带的条件"><span class="toc-number">2.2.</span> <span class="toc-text">Cookie被携带的条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置Cookie的方式"><span class="toc-number">2.3.</span> <span class="toc-text">设置Cookie的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie-分析-amp-amp-总结"><span class="toc-number">2.4.</span> <span class="toc-text">Cookie 分析 &amp;&amp; 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单点登录"><span class="toc-number">3.</span> <span class="toc-text">单点登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-number">4.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章："><span class="toc-number">5.</span> <span class="toc-text">参考文章：</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="登录小记" data-title="登录小记" data-url="http://yoursite.com/2018/10/25/%E7%99%BB%E5%BD%95%E5%B0%8F%E8%AE%B0/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +457,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

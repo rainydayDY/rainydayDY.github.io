@@ -6,15 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>icon 的使用方式 | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="使用svg-sprite-loader和svgo处理icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="icon 的使用方式">
+<meta property="og:url" content="http://yoursite.com/2019/01/25/icon-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="使用svg-sprite-loader和svgo处理icon">
+<meta property="article:published_time" content="2019-01-25T03:11:26.000Z">
+<meta property="article:modified_time" content="2019-11-22T08:37:35.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="svg">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
@@ -169,83 +172,127 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-icon-的使用方式" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      icon 的使用方式
+    </h1>
+  
+
+        
+        <a href="/2019/01/25/icon-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2019-01-25T03:11:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-25</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>使用svg-sprite-loader和svgo处理icon</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+
+<h3 id="为什么不推荐使用iconfont"><a href="#为什么不推荐使用iconfont" class="headerlink" title="为什么不推荐使用iconfont"></a>为什么不推荐使用iconfont</h3><ol>
+<li>引入的字体文件如果下载到本地，每次新增或者修改icon，我们都需要重新下载一遍，如果通过外链的方式，每次都要改一遍地址，不方便</li>
+<li>不同的项目的UI规范是不一样的，每次项目中的icon在我们看来，没什么区别，实际上线条的宽度圆角什么的是有差别的</li>
+</ol>
+<h3 id="为什么使用svg"><a href="#为什么使用svg" class="headerlink" title="为什么使用svg"></a>为什么使用svg</h3><ol>
+<li>支持多色图标了，不再受单色限制。</li>
+<li>支持像字体那样通过font-size,color来调整样式。</li>
+<li>支持 ie9+</li>
+<li>可利用CSS实现动画。</li>
+<li>减少HTTP请求。</li>
+<li>矢量，缩放不失真</li>
+<li>可以很精细的控制SVG图标的每一部分</li>
+</ol>
+<h3 id="svg-sprite-loader"><a href="#svg-sprite-loader" class="headerlink" title="svg-sprite-loader"></a>svg-sprite-loader</h3><p>将svg文件打包成一个雪碧图，并且在页面加载的时候自动注入到document.body下，每个需要使用的地方通过use复制模板</p>
+<p>use：在SVG文档内取得目标节点，并在别的地方复制它们</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><ol>
+<li>下载svg格式的icon（如果同一icon在项目中有多个颜色的显示，下载完成后，将fill属性去掉，不然自己写的颜色的是无效的）；</li>
+<li>统一放置在目录assets/icon下</li>
+<li>安装依赖： svg-sprite-loader</li>
+<li>配置webpack</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: &#x2F;\.svg$&#x2F;,</span><br><span class="line">    loader: &#39;svg-sprite-loader&#39;,</span><br><span class="line">    include: resolve(&#39;src&#x2F;assets&#x2F;svg&#39;),</span><br><span class="line">    options: &#123;</span><br><span class="line">        symbolId: &#39;icon-[name]&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">    test: &#x2F;\.(woff2?|eot|ttf|otf|svg)(\?.*)?$&#x2F;,</span><br><span class="line">        loader: &#39;url-loader&#39;,</span><br><span class="line">        exclude: resolve(&#39;src&#x2F;assets&#x2F;svg&#39;),</span><br><span class="line">        options: &#123;</span><br><span class="line">            limit: 10240,</span><br><span class="line">            name: &#39;static&#x2F;fonts&#x2F;[name].[hash:8].[ext]&#39;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>index.jsx中对icon进行自动导入</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils/svgIcon.js</span></span><br><span class="line"><span class="keyword">const</span> requireAll = <span class="function"><span class="params">requireContext</span> =&gt;</span> requireContext.keys().map(requireContext);</span><br><span class="line"><span class="keyword">const</span> req = <span class="built_in">require</span>.context(<span class="string">'../assets/svg'</span>, <span class="literal">false</span>, /\.svg$/);</span><br><span class="line">requireAll(req);</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>SvgIcon组件<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> PropTypes <span class="keyword">from</span> <span class="string">'prop-types'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.less'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">SvgIcon</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">        iconClass: PropTypes.string.isRequired,</span><br><span class="line">        className: PropTypes.string,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; iconClass, className &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">        <span class="keyword">const</span> svgClass = className ? <span class="string">'svg-icon '</span> + className : <span class="string">'svg-icon'</span>;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;svg className=&#123;svgClass&#125; aria-hidden=<span class="string">"true"</span>&gt;</span><br><span class="line">                &lt;use xlinkHref=&#123;<span class="string">`#icon-<span class="subst">$&#123;iconClass&#125;</span>`</span>&#125;&gt;&lt;<span class="regexp">/use&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>svg&gt;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>引入SvgIcon<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SvgIcon iconClass=<span class="string">"svg的名称"</span> className=<span class="string">""</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="svg压缩工具——————svgo"><a href="#svg压缩工具——————svgo" class="headerlink" title="svg压缩工具——————svgo"></a>svg压缩工具——————svgo</h3><p>我们从UI那里拿到的svg带有很多冗余信息，比方说下面这个：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">width</span>=<span class="string">"54px"</span> <span class="attr">height</span>=<span class="string">"45px"</span> <span class="attr">viewBox</span>=<span class="string">"0 0 54 45"</span> <span class="attr">version</span>=<span class="string">"1.1"</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/2000/svg"</span> <span class="attr">xmlns:xlink</span>=<span class="string">"http://www.w3.org/1999/xlink"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>换<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">desc</span>&gt;</span>Created with Sketch.<span class="tag">&lt;/<span class="name">desc</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">"接单发货"</span> <span class="attr">stroke</span>=<span class="string">"none"</span> <span class="attr">stroke-width</span>=<span class="string">"1"</span> <span class="attr">fill</span>=<span class="string">"none"</span> <span class="attr">fill-rule</span>=<span class="string">"evenodd"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">"采购单详情-修改采购单"</span> <span class="attr">transform</span>=<span class="string">"translate(-60.000000, -1554.000000)"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">g</span> <span class="attr">id</span>=<span class="string">"换"</span> <span class="attr">transform</span>=<span class="string">"translate(60.000000, 1554.000000)"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">"M3,0 L51,0 C52.6568542,-3.04359188e-16 54,1.34314575 54,3 L54,42 C54,43.6568542 52.6568542,45 51,45 L0,45 L0,3 C-2.02906125e-16,1.34314575 1.34314575,3.04359188e-16 3,0 Z"</span> <span class="attr">id</span>=<span class="string">"Rectangle-7-Copy-4"</span> <span class="attr">fill</span>=<span class="string">"#ECF8F1"</span>&gt;</span><span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">text</span> <span class="attr">font-family</span>=<span class="string">"PingFangSC-Regular, PingFang SC"</span> <span class="attr">font-size</span>=<span class="string">"30"</span> <span class="attr">font-weight</span>=<span class="string">"normal"</span> <span class="attr">line-spacing</span>=<span class="string">"36"</span> <span class="attr">fill</span>=<span class="string">"#43C177"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">tspan</span> <span class="attr">x</span>=<span class="string">"12"</span> <span class="attr">y</span>=<span class="string">"33"</span>&gt;</span>换<span class="tag">&lt;/<span class="name">tspan</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">g</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>里面包含了不必要的xml信息、编辑器信息、title、描述信息等，这些信息并不会影响svg的展示</p>
+<p>经过压缩之后：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/2000/svg"</span> <span class="attr">viewBox</span>=<span class="string">"0 0 54 45"</span>&gt;</span><span class="tag">&lt;<span class="name">g</span> <span class="attr">fill</span>=<span class="string">"none"</span> <span class="attr">fill-rule</span>=<span class="string">"evenodd"</span>&gt;</span><span class="tag">&lt;<span class="name">path</span> <span class="attr">fill</span>=<span class="string">"#ECF8F1"</span> <span class="attr">d</span>=<span class="string">"M3 0h48a3 3 0 013 3v39a3 3 0 01-3 3H0V3a3 3 0 013-3z"</span>/&gt;</span><span class="tag">&lt;<span class="name">text</span> <span class="attr">fill</span>=<span class="string">"#43C177"</span> <span class="attr">font-family</span>=<span class="string">"PingFangSC-Regular, PingFang SC"</span> <span class="attr">font-size</span>=<span class="string">"30"</span>&gt;</span><span class="tag">&lt;<span class="name">tspan</span> <span class="attr">x</span>=<span class="string">"12"</span> <span class="attr">y</span>=<span class="string">"33"</span>&gt;</span>换<span class="tag">&lt;/<span class="name">tspan</span>&gt;</span><span class="tag">&lt;/<span class="name">text</span>&gt;</span><span class="tag">&lt;/<span class="name">g</span>&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>压缩脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 压缩svg，去除冗余信息</span></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> SVGO = <span class="built_in">require</span>(<span class="string">'svgo'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fileDir = path.join(__dirname, <span class="string">'src/assets/svg'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> svgo = <span class="keyword">new</span> SVGO(&#123;</span><br><span class="line">    plugins: [&#123;</span><br><span class="line">        cleanupAttrs: <span class="literal">true</span>, <span class="comment">// 从换行符，尾随空格和重复空格中清除属性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeDoctype: <span class="literal">true</span>, <span class="comment">// 删除文档类型声明</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeXMLProcInst: <span class="literal">true</span>, <span class="comment">// 删除XML处理指令</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeComments: <span class="literal">true</span>, <span class="comment">// 删除评论</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeMetadata: <span class="literal">true</span>, </span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeTitle: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeDesc: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeUselessDefs: <span class="literal">true</span>, <span class="comment">// 删除没有ID的&lt;defs&gt;元素</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeEditorsNSData: <span class="literal">true</span>, <span class="comment">// 删除编辑器的命名空间，元素和属性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeEmptyAttrs: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeHiddenElems: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeEmptyText: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeEmptyContainers: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeViewBox: <span class="literal">false</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        cleanupEnableBackground: <span class="literal">true</span>,</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        convertStyleToAttrs: <span class="literal">true</span>, <span class="comment">// 将样式转换为属性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        convertColors: <span class="literal">true</span>, <span class="comment">// 将rgba转换为16进制颜色</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        convertPathData: <span class="literal">true</span>, <span class="comment">// 将Path数据转换为相对或绝对数据（以较短者为准），将一个段转换为另一段，修剪无用的定界符，智能舍入等</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        convertTransform: <span class="literal">true</span>, <span class="comment">// 将多个转换折叠为一个，将矩阵转换为短别名，等等</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeUnknownsAndDefaults: <span class="literal">true</span>, <span class="comment">// 删除未知元素的内容和属性，使用默认值删除属性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeNonInheritableGroupAttrs: <span class="literal">true</span>, <span class="comment">// 删除不可继承组的“表示”属性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeUselessStrokeAndFill: <span class="literal">true</span>, <span class="comment">// 删除无用的stroke和fill属性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeUnusedNS: <span class="literal">true</span>, <span class="comment">// 删除未使用的名称空间声明</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        cleanupIDs: <span class="literal">true</span>, <span class="comment">// 删除未使用的并最小化使用的ID</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        cleanupNumericValues: <span class="literal">true</span>, <span class="comment">// 将数值四舍五入到固定精度，删除默认的px单位</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        moveElemsAttrsToGroup: <span class="literal">true</span>, <span class="comment">// 将元素的属性移到其所属的组中</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        moveGroupAttrsToElems: <span class="literal">true</span>, <span class="comment">// 将一些组属性移动到所包含的元素</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        collapseGroups: <span class="literal">true</span>, <span class="comment">// 折叠无用的组</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeRasterImages: <span class="literal">false</span>, <span class="comment">// 删除光栅图像</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        mergePaths: <span class="literal">true</span>, <span class="comment">// 将多个路径合并为一个</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        convertShapeToPath: <span class="literal">true</span>, <span class="comment">// 将一些基本形状转换为&lt;path&gt;</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        sortAttrs: <span class="literal">true</span>, <span class="comment">// 排序元素属性以实现史诗般的可读性</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        removeDimensions: <span class="literal">true</span>, <span class="comment">// 删除宽度/高度并添加viewBox（如果缺少）（与removeViewBox相反，请先禁用它）</span></span><br><span class="line">    &#125;],</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">fs.readdir(fileDir, (err, files) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (!err) &#123;</span><br><span class="line">        files.forEach(<span class="function">(<span class="params">fileName</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// 对大于1kb的svg文件采取压缩</span></span><br><span class="line">            <span class="keyword">if</span> (fileName.endsWith(<span class="string">'.svg'</span>)) &#123;</span><br><span class="line">                <span class="keyword">const</span> filePath = <span class="string">`<span class="subst">$&#123;fileDir&#125;</span>/<span class="subst">$&#123;fileName&#125;</span>`</span>;</span><br><span class="line">                fs.readFile(filePath, &#123; <span class="attr">encoding</span>: <span class="string">'utf-8'</span> &#125;, (err, data) =&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!err) &#123;</span><br><span class="line">                        svgo.optimize(data, &#123;&#125;).then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (result.data) &#123;</span><br><span class="line">                                fs.writeFileSync(filePath, result.data);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">                <span class="comment">// fs.stat(filePath, (err, stats) =&gt; &#123;</span></span><br><span class="line">                <span class="comment">//     if (!err) &#123;</span></span><br><span class="line">                <span class="comment">//         if (stats.size &gt; 1000) &#123;</span></span><br><span class="line">                <span class="comment">//             console.log(fileName, stats.size);</span></span><br><span class="line">                            </span><br><span class="line">                <span class="comment">//         &#125;</span></span><br><span class="line">                <span class="comment">//     &#125;</span></span><br><span class="line">                <span class="comment">// &#125;);</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>参考文章：</p>
+<ol>
+<li><a href="https://juejin.im/post/59bb864b5188257e7a427c09#heading-6" target="_blank" rel="noopener">手摸手，带你优雅的使用 icon</a></li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">svg</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +305,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/01/25/icon-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/01/26/React%E6%B8%B2%E6%9F%93/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          React渲染
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/29/2018%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2018年度总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么不推荐使用iconfont"><span class="toc-number">1.</span> <span class="toc-text">为什么不推荐使用iconfont</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么使用svg"><span class="toc-number">2.</span> <span class="toc-text">为什么使用svg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#svg-sprite-loader"><span class="toc-number">3.</span> <span class="toc-text">svg-sprite-loader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用方式"><span class="toc-number">4.</span> <span class="toc-text">使用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#svg压缩工具——————svgo"><span class="toc-number">5.</span> <span class="toc-text">svg压缩工具——————svgo</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="icon-的使用方式" data-title="icon 的使用方式" data-url="http://yoursite.com/2019/01/25/icon-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +467,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

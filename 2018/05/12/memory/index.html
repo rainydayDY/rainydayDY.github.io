@@ -6,16 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>node js 处理内存泄漏 | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求：解决上一次node js将pdf转为json，文件数量超过30报错的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="node js 处理内存泄漏">
+<meta property="og:url" content="http://yoursite.com/2018/05/12/memory/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求：解决上一次node js将pdf转为json，文件数量超过30报错的问题">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/4/28/1630b52a674650e6?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="article:published_time" content="2018-05-12T03:53:30.000Z">
+<meta property="article:modified_time" content="2018-05-13T05:31:50.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="node js">
+<meta property="article:tag" content="V8">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/4/28/1630b52a674650e6?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
   
@@ -169,83 +175,147 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-memory" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      node js 处理内存泄漏
+    </h1>
+  
+
+        
+        <a href="/2018/05/12/memory/" class="archive-article-date">
+  	<time datetime="2018-05-12T03:53:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-12</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求：解决上一次node js将pdf转为json，文件数量超过30报错的问题</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+首先列出报错信息：
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out <span class="keyword">of</span> memory</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/28/1630b52a674650e6?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="报错"></p>
+<p>出现问题的原因：</p>
+<ol>
+<li>网上有一种回答是：解析的是一个大的文件，转换为json后，相当于操作一个巨大的对象，所以会报错，但是文件数量小的时候，解析是正常的，所以这种假设可以排除。</li>
+<li>内存溢出，程序执行所需要的内存超出了系统分配给内存大小</li>
+</ol>
+<p>&nbsp;&nbsp;解释：由于node是基于V8引擎，在node中通过javascript使用内存时只能使用部分内存，64位系统下约为1.4GB，32位系统下约为0.7GB，当执行的程序占用系统资源过高，超出了V8对node默认的内存限制大小就会报上图所示错误。</p>
+<p>&nbsp;&nbsp;如果是编译项目，V8提供的默认内存大小不够用，可以去修改 –max-old-space-size，但是我目前的需求是处理2000多个pdf文件，解析为json，所以使用的内存大小是不确定的，不能采取这种方案。</p>
+<p>&nbsp;&nbsp;我的理解：node js 很多操作都是异步执行的，而异步操作的结果就是不能确保执行完成的时间，所以当多个异步操作同时进行的时候，不能确保执行完成的顺序，但是执行的结果又是相互关联的，所以在执行的时候，会一直占用内存，而不被垃圾回收机制回收，造成内存泄漏。</p>
+<hr>
+<h3 id="错误的代码"><a href="#错误的代码" class="headerlink" title="错误的代码"></a>错误的代码</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PDFParser = <span class="built_in">require</span>(<span class="string">'pdf2json'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> src = <span class="string">'./pdf'</span>;</span><br><span class="line"><span class="keyword">const</span> xlsx = <span class="built_in">require</span>(<span class="string">'node-xlsx'</span>);</span><br><span class="line"><span class="keyword">let</span> list = [[<span class="string">'序号'</span>,<span class="string">'统一社会信用代码'</span>,<span class="string">'单位名称'</span>,<span class="string">'行业类别'</span>]];</span><br><span class="line"><span class="keyword">let</span> index = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> len = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">fs.readdir(src, (err, files) =&gt; &#123;</span><br><span class="line">    len = files.length;</span><br><span class="line">    files.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> pdfParser = <span class="keyword">new</span> PDFParser(<span class="keyword">this</span>, <span class="number">1</span>);</span><br><span class="line">        pdfParser.loadPDF(<span class="string">`<span class="subst">$&#123;src&#125;</span>/<span class="subst">$&#123;item&#125;</span>`</span>);</span><br><span class="line">        pdfParser.on(<span class="string">'pdfParser_dataError'</span>, errData =&gt; <span class="built_in">console</span>.error(errData.parserError)); pdfParser.on(<span class="string">'pdfParser_dataReady'</span>, () =&gt; &#123;</span><br><span class="line">            <span class="keyword">let</span> data = pdfParser.getRawTextContent();</span><br><span class="line">            <span class="keyword">let</span> result = data.match(<span class="regexp">/(统一社会信用代码|单位名称|行业类别)：[\S]*/g</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span> ;i &lt; <span class="number">3</span>;++i)&#123;</span><br><span class="line">                result[i] = result[i].split(<span class="string">'：'</span>)[<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            list.push(result);</span><br><span class="line">            ++index;</span><br><span class="line">            <span class="keyword">if</span>( index === len)&#123;</span><br><span class="line">                <span class="keyword">var</span> buffer = xlsx.build([&#123;<span class="attr">name</span>: <span class="string">'company'</span>, <span class="attr">data</span>: list&#125;]); <span class="comment">// Returns a buffer</span></span><br><span class="line">                fs.writeFileSync(<span class="string">'list.csv'</span>, buffer, <span class="string">'binary'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>&nbsp;&nbsp;但是究竟这个异步操作的并发量的上限是多少，不能确定，有一个同学尝试过，读取PDF文件的时候，上限是30，分析以上结果，进行改进，改进之后，每次执行五个异步操作，执行完成之后再继续执行下一个五个异步函数。</p>
+<p>&nbsp;&nbsp;测试过，这种方式处理100个文件时没有问题的，对比了两种方式方法，以34个文件为测试用例：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th align="center">文件数量</th>
+<th>读取时间(s)</th>
+<th align="center">CPU</th>
+<th align="center">内存</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>方法一</td>
+<td align="center">34</td>
+<td>26.817</td>
+<td align="center">暴涨(14%-42%)</td>
+<td align="center">最大(1591MB)</td>
+</tr>
+<tr>
+<td>方法二</td>
+<td align="center">34</td>
+<td>19.374</td>
+<td align="center">(36%)平稳</td>
+<td align="center">最大(300MB)</td>
+</tr>
+</tbody></table>
+<h3 id="改进后核心代码"><a href="#改进后核心代码" class="headerlink" title="改进后核心代码"></a>改进后核心代码</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">ConvertToJSON(path)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> pdfParser = <span class="keyword">new</span> PDFParser(<span class="keyword">this</span>, <span class="number">1</span>);</span><br><span class="line">        pdfParser.loadPDF(<span class="string">`<span class="subst">$&#123;src&#125;</span>/<span class="subst">$&#123;path&#125;</span>`</span>);</span><br><span class="line">        pdfParser.on(<span class="string">'pdfParser_dataError'</span>, errData =&gt;reject( <span class="keyword">new</span> <span class="built_in">Error</span>(errData.parserError)));</span><br><span class="line">        pdfParser.on(<span class="string">'pdfParser_dataReady'</span>, () =&gt; &#123;</span><br><span class="line">            <span class="comment">// 省略处理部分</span></span><br><span class="line">            resolve(result);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;).catch(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(error);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">seek(callback)&#123;</span><br><span class="line">    <span class="keyword">let</span> arr = <span class="keyword">this</span>.files.splice(<span class="number">0</span>,<span class="number">5</span>);</span><br><span class="line">    <span class="keyword">let</span> all = [];</span><br><span class="line">    arr.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        all.push(<span class="keyword">this</span>.ConvertToJSON(item));</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">let</span> promise = <span class="built_in">Promise</span>.all(all);</span><br><span class="line">    promise.then(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">       <span class="comment">// 省略处理部分</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.files.length === <span class="number">0</span> ? callback(<span class="keyword">this</span>.list) : <span class="keyword">this</span>.seek(callback);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/rainydayDY/batchPDF" target="_blank" rel="noopener">源码地址</a>，欢迎指正。</p>
+<p>参考文档：</p>
+<ol>
+<li><a href="https://blog.csdn.net/swimming_in_it_/article/details/78869549" target="_blank" rel="noopener">v8引擎详解</a></li>
+<li><a href="https://blog.csdn.net/jklfjsdj79hiofo/article/details/7842177" target="_blank" rel="noopener">Google V8 引擎 原理详解</a></li>
+<li><a href="https://stackoverflow.com/questions/26094420/fatal-error-call-and-retry-last-allocation-failed-process-out-of-memory" target="_blank" rel="noopener">FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - process out of memory
+</a></li>
+<li><a href="http://www.jb51.net/article/91907.htm" target="_blank" rel="noopener">nodeJs内存泄漏问题详解</a></li>
+</ol>
+<p>最近读书分享（来源：掘金）</p>
+<ol>
+<li><a href="https://juejin.im/post/5ac45882518825558723c4fd" target="_blank" rel="noopener">浏览器渲染引擎</a></li>
+<li><a href="http://web.jobbole.com/84826/" target="_blank" rel="noopener">主流浏览器内核介绍</a></li>
+<li><a href="https://www.zcfy.cc/article/an-easy-guide-to-object-rest-spread-properties-in-javascript" target="_blank" rel="noopener">对象扩展符简易指南</a></li>
+<li><a href="https://juejin.im/post/5ae292c86fb9a07a9c03efab" target="_blank" rel="noopener">用Flow提升前端健壮性</a></li>
+<li><a href="https://juejin.im/post/5ae1c2936fb9a07a9c03ec1c" target="_blank" rel="noopener">JavaScript 工作原理之二－如何在 V8 引擎中书写最优代码的 5 条小技巧(译)</a></li>
+</ol>
+<blockquote>
+<p>心得：以上是我最近读到的，我认为非常好的文章。关于浏览器内核，这样的文章一直都在读，但是每一次读，理解都是不一样的，有一种书读百遍其义自见的感觉，学的知识越多，再去读以前读过的文章，理解就更深刻，共勉。</p>
+</blockquote>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">node js</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">V8</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +328,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/12/memory/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/05/25/vue-router/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          后台管理实现按钮级别的权限控制（小记）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/14/request/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">FormData--文件上传</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#错误的代码"><span class="toc-number">1.</span> <span class="toc-text">错误的代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#改进后核心代码"><span class="toc-number">2.</span> <span class="toc-text">改进后核心代码</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="memory" data-title="node js 处理内存泄漏" data-url="http://yoursite.com/2018/05/12/memory/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +490,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

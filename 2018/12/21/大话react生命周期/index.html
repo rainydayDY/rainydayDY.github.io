@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>大话react生命周期 | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求： 分析生命周期的触发时机 &amp;&amp; react中在生命周期的触发中常见业务场景">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大话react生命周期">
+<meta property="og:url" content="http://yoursite.com/2018/12/21/%E5%A4%A7%E8%AF%9Dreact%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求： 分析生命周期的触发时机 &amp;&amp; react中在生命周期的触发中常见业务场景">
+<meta property="article:published_time" content="2018-12-21T07:14:26.000Z">
+<meta property="article:modified_time" content="2018-12-24T09:40:33.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="场景">
+<meta property="article:tag" content="use">
+<meta property="article:tag" content="redux">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
@@ -169,83 +174,158 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-大话react生命周期" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      大话react生命周期
+    </h1>
+  
+
+        
+        <a href="/2018/12/21/%E5%A4%A7%E8%AF%9Dreact%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="archive-article-date">
+  	<time datetime="2018-12-21T07:14:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-21</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求： 分析生命周期的触发时机 &amp;&amp; react中在生命周期的触发中常见业务场景</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+
+<p>组件的生命周期，是指一个组件从创建到销毁的过程，有一个比喻做的很形象，组件的生命周期可以看做是一只蚂蚁爬过一根吊绳，这只蚂蚁从头爬到尾，会依次触动不同的卡片挂钩，这个卡片挂钩就是生命周期中的钩子函数。而事实上如果蚂蚁的行动路线不同，有的卡片就不会碰到，有些卡片一定会碰到。一定会碰到的卡片对应于生命周期中必经的钩子函数，如compomentDidMount, componentWillUnmount,render，而不会碰到的可能是componentWillReceiveProps这样的钩子。</p>
+<h2 id="要点概述"><a href="#要点概述" class="headerlink" title="要点概述"></a>要点概述</h2><ol>
+<li>路由参数的变化，页面如何刷新？</li>
+<li>如何缓存组件？在哪个阶段对组件进行缓存？</li>
+<li>登录的时候，在哪里进行token判断？</li>
+<li>render函数在什么时候触发？</li>
+<li>详情页传来的参数在什么时候存，localstrage在什么时候写入和读取？</li>
+<li>全局事件注册时机？（点击空白处关闭弹窗）</li>
+<li>scrollTop滚动时机？</li>
+</ol>
+<h2 id="生命周期阶段概述"><a href="#生命周期阶段概述" class="headerlink" title="生命周期阶段概述"></a>生命周期阶段概述</h2><ol>
+<li>constuctor — 初始化阶段，构造函数，初始化state</li>
+<li>componentWillMount — 组件即将被渲染，此时DOM还未形成，只会调用一次</li>
+<li>render — 返回jsx</li>
+<li>componentDidMount — 组件挂载时执行，此时已形成DOM</li>
+<li>componentWillReceiveProps — 父组件的传递的props发生改变或者父组件re-render的时候，</li>
+<li>componentWillUpdate — 父组件的传递的props发生改变，先触发此钩子函数</li>
+<li>componentDidUpdate — render执行完之后执行，DOM确实已更新</li>
+<li>componentWillUnmount — 组件卸载，销毁</li>
+</ol>
+<blockquote>
+<p>Tip: 挂载——组件被实例化并且被挂载到dom树上的过程称为挂载<br>     卸载——组件被移除Dom树</p>
+</blockquote>
+<h2 id="父子组件的生命周期"><a href="#父子组件的生命周期" class="headerlink" title="父子组件的生命周期"></a>父子组件的生命周期</h2><p>初次加载执行顺序：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">父组件<span class="keyword">constructor</span></span><br><span class="line">父组件WillMount</span><br><span class="line">父组件render</span><br><span class="line">子组件<span class="keyword">constructor</span></span><br><span class="line">子组件WillMount</span><br><span class="line">子组件render</span><br><span class="line">子组件DidMount</span><br><span class="line">父组件DidMount</span><br><span class="line">父组件WillUnmount</span><br><span class="line">子组件WillUnmount</span><br></pre></td></tr></table></figure>
+<p>当子组件内的表单项改变了，此时的生命周期变化为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">父组件WillUpdate</span><br><span class="line">父组件render</span><br><span class="line">子组件WillReceiveProps</span><br><span class="line">子组件WillUpdate</span><br><span class="line">子组件render</span><br><span class="line">子组件DidUpdate</span><br><span class="line">父组件DidUpdate</span><br></pre></td></tr></table></figure>
+<h2 id="实例-amp-amp-场景"><a href="#实例-amp-amp-场景" class="headerlink" title="实例 &amp;&amp; 场景"></a>实例 &amp;&amp; 场景</h2><h3 id="路由参数的变化，刷新页面"><a href="#路由参数的变化，刷新页面" class="headerlink" title="路由参数的变化，刷新页面"></a>路由参数的变化，刷新页面</h3><p>实际开发中，常常有这样的场景，列表对应一个组件，一个路由，详情对应一个组件，一个路由，页面可能会因为参数的不同，需要来回切换，比如说一个tab页，有三种状态：待查看、已查看、已完成，实际上布局一样，请求的地址也一样，只是参数不同，切换的时候需要重新发送请求，这种场景就会有两种方案：<br><strong><em>方案1</em></strong><br>监听切换tab的事件，发送请求<br><strong><em>方案2</em></strong><br>监听路由参数的变化，发送请求<br>方案1，直接在事件上做处理，但是如果是详情页不同，从一个详情页跳转到另一个详情页，路由没有发生变化，只是参数发生了变化，这时候页面不会刷新，请求也不会发送，组件也没有发生变化，此时会触发的生命周期函数只有两个componentWillReceiveProps和componentDidUpdate，所以可以像下面这样处理：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">componentWillReceiveProps(nextProps) &#123;</span><br><span class="line">    <span class="comment">// 仅当两个路由完全相同，参数不同的页面切换时，才会触发。</span></span><br><span class="line">    <span class="keyword">if</span> (nextProps.location.search !== <span class="keyword">this</span>.props.location.search) &#123;</span><br><span class="line">        <span class="keyword">this</span>.getDetail(nextProps.location.search);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="缓存页面数据"><a href="#缓存页面数据" class="headerlink" title="缓存页面数据"></a>缓存页面数据</h3><p>react中没有类似vue中keep-alive那样的缓存组件的功能，如果想要缓存组件数据，需要自己手动去做存储，选择存在redux中是比较好的选择，那么在什么时机存储呢？路由切换，上一个组件就会销毁，然后新的组件的生命周期会开始，所以对应于不同路由间切换，存储数据可以选择在组件销毁阶段或者组件挂载阶段，选择其一即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">componentWillUnmount() &#123;</span><br><span class="line">    <span class="comment">// 在用户未自己进行保存的前提下，才去存redux</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.props.isSave) &#123;</span><br><span class="line">        <span class="keyword">this</span>.handleSaveRedux();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>想象一下，如果是在两个详情页之间切换路由，怎么进行缓存呢？上面已经提到要在componentWillReceiveProps这个生命周期中处理，我们需要缓存上一个组件的数据，同时要获取新组件的数据：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">componentWillReceiveProps(nextProps) &#123;</span><br><span class="line">    <span class="keyword">if</span> (nextProps.location.search !== <span class="keyword">this</span>.props.location.search) &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; <span class="attr">location</span>: &#123; search, pathname &#125; &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">        <span class="keyword">this</span>.handleSaveRedux(<span class="string">`<span class="subst">$&#123;pathname&#125;</span><span class="subst">$&#123;search&#125;</span>`</span>); <span class="comment">// 先存上一个路由的数据</span></span><br><span class="line">        <span class="keyword">this</span>.getDetail(nextProps.location.search); <span class="comment">// 后取下一个组件的数据</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果详情页由父子组件组成，子组件做表单处理，父组件做数据处理，发送请求，提交请求等，那么保存表单数据就会是子组件处理，这时候，如果想要利用上面的钩子函数，需要注意父子组件的钩子函数的执行顺序，一定是先在子组件内保存数据，然后在父组件中拉取新页面的数据，但是此时父组件的componentWillReceiveProps优先于子组件执行，那么上面的可以改成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">componentWillReceiveProps(nextProps) &#123;</span><br><span class="line">    <span class="comment">// 父组件</span></span><br><span class="line">    <span class="keyword">if</span> (nextProps.location.search !== <span class="keyword">this</span>.props.location.search) &#123;</span><br><span class="line">        <span class="comment">// 优先内层FormPage保存数据，保存完一个页面的数据，此页面带入新页面的数据</span></span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.getDetail(nextProps.location.search); <span class="comment">// 后取下一个组件的数据</span></span><br><span class="line">        &#125;, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">componentWillReceiveProps(nextProps) &#123;</span><br><span class="line">    <span class="comment">// 子组件</span></span><br><span class="line">    <span class="keyword">if</span> (nextProps.location.search !== <span class="keyword">this</span>.props.location.search) &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; <span class="attr">location</span>: &#123; search, pathname &#125; &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">        <span class="keyword">this</span>.handleSaveRedux(<span class="string">`<span class="subst">$&#123;pathname&#125;</span><span class="subst">$&#123;search&#125;</span>`</span>); <span class="comment">// 先存上一个路由的数据</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="判断登录态的时机"><a href="#判断登录态的时机" class="headerlink" title="判断登录态的时机"></a>判断登录态的时机</h3><p>如果页面处于登录态，正常跳转，如果没有，那么就要跳转到登录页，这个登录态的判断，通常以token形式存在，单页面应用中，为了避免刷新页面导致、redux数据消失，所以存在localstorage中， 每次进入页面前都先判断一遍，token是否存在，如果这样的判断在每个页面都写一遍肯定是不行的，所以可以将这样的判断写在basicLayout组件里，担任所有其他页面的父组件的角色。如果登录全由我们自己控制，这个登录条件的判断写在componentDidMount或者componentWillMount里面都可以，因为layout里面的判断逻辑只会执行一遍，如果是加了微信的授权登录，中途有个跳转到第三方页面的过程，所以这时候一定要注意生命周期，未登录的状态下，保证先获取到token，再去判断token，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 登录组件</span></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">        <span class="keyword">if</span> (!code) &#123;</span><br><span class="line">            getThirdCode(); <span class="comment">// 微信授权登录，获取code值，获取完成之后又跳回登录页，此时携带code，有了code值之后不再刷新页面</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">// layout组件</span></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">        <span class="keyword">if</span> (!token) &#123;</span><br><span class="line">            History.push(<span class="string">'/login'</span>); <span class="comment">// 子组件的componentDidMount先执行，所以这时再去跳转，不会刷洗页面，组件没有销毁。</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>先执行子组件的componentDidMount，再执行父组件的componentDidMount，好处是，跳转一次三方页面获取成功code值之后，虽然父组件又判断了一遍，但是此时路由没有变化，没有再次执行componentDidMount，所以没有再次去获取code值，code值页存在state中，没有变，但是如果此时改成下面：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// layout组件</span></span><br><span class="line">componentWillMount() &#123;</span><br><span class="line">    <span class="keyword">if</span> (!token) &#123;</span><br><span class="line">        History.push(<span class="string">'/login'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时的问题就是父组件先判断没有token，跳到登录页，登录页发现没有code跳到三方页，三方页又跳回登录页，url中有code,layout组件中的componentWillMount先于登录组件的componentDidMount执行，执行了一次跳转，此时跳回登录页无code值，就又会跳回三方页获取code，所以会不断的循环，登录页不断的刷新，用户永远都进入不了登录页进行登录。。</p>
+<h3 id="render函数"><a href="#render函数" class="headerlink" title="render函数"></a>render函数</h3><p>调用时机：</p>
+<ol>
+<li>组件初始化</li>
+<li>组件的props和state发生改变</li>
+<li>组件内调用forceUpdate函数</li>
+<li>父组件调用了render函数，即使子组件的props和之前一样，也会调用render</li>
+</ol>
+<blockquote>
+<p>render函数并不做实际的渲染动作，它只是返回一个jsx描述的结构，最终由React来操作渲染过程</p>
+</blockquote>
+<h3 id="参数缓存时机"><a href="#参数缓存时机" class="headerlink" title="参数缓存时机"></a>参数缓存时机</h3><p>场景是这样的，用户进入详情页的方式有很多种，可以从列表页进入，也可以通过某个链接直接访问，当用户通过点击链接进入详情页的时候，发送请求时需要携带链接地址中的参数，如果直接点击进来不做token校验，没有问题，直接进入然后获取参数即可，如果需要做token校验，并且中间会使用第三方登录（意味着中间会刷新页面），所以这个参数的存储就成了问题，存redux里是不行的，因为中间有刷新过程，所以考虑存到localstorage里，并且在layout中做处理，此时一定是先存，后取，所以父组件的这个钩子函数的执行要早于子组件的钩子函数，子组件的请求通常写在componentDidMount中，那么父组件的选择只能是componentWillMount或者constuctor中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">componentWillMount() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">location</span>: &#123; search &#125; &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">const</span> params = getParams(search, <span class="string">'id'</span>);  </span><br><span class="line">    params &amp;&amp; writeLocalStorage(<span class="string">'id'</span>, params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="点击空白处关闭弹窗"><a href="#点击空白处关闭弹窗" class="headerlink" title="点击空白处关闭弹窗"></a>点击空白处关闭弹窗</h3><p>绑定DOM事件，一定要在DOM 形成之后，即componentDidMount阶段：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">componentDidMount() &#123;</span><br><span class="line">    <span class="built_in">document</span>.addEventListener(<span class="string">'click'</span>, <span class="keyword">this</span>.closeMenu);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此外，点击弹框内的button要正确执行，就不得不阻止事件冒泡，react中的阻止事件冒泡：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">closeTag = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    e.nativeEvent.stopImmediatePropagation();</span><br><span class="line">    e.preventDefault &amp;&amp; e.preventDefault();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="scrollTop滚动时机"><a href="#scrollTop滚动时机" class="headerlink" title="scrollTop滚动时机"></a>scrollTop滚动时机</h3><p>场景描述：一个详情页，可以添加多个卡片，每次添加完一个卡片，滚动条都要滚动到最底端，以便用户可以直接点击加号进行卡片添加和编辑刚刚新增加的卡片。<br>从实现上讲，添加卡片，其实就是渲染一个卡片列表，实质上是往数组里面push一个新的对象，即：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">handleAdd = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(<span class="function">(<span class="params">&#123; cardList &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">        cardList: cardList.concat(newItem),</span><br><span class="line">    &#125;));</span><br><span class="line">    <span class="keyword">this</span>.scrollToBottom();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> scrollToBottom = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> content = <span class="keyword">this</span>.listPage; <span class="comment">// 通过设置ref获取 &lt;div ref=&#123;listPage =&gt; this.listPage = listPage&#125;&gt;&lt;/div&gt;</span></span><br><span class="line">    content.scrollTop = content.scrollHeight - <span class="built_in">window</span>.document.body.clientHeight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本上思路是这样的，然后尝试添加卡片，发现滚动没有效果啊，？？？？<br>理一下思路，首先要想到的是setState是异步行为，可是在添加卡片的过程中，都触发了哪些生命周期呢？<br>首先肯定是state变化了，所以顺序应该是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">componentWillUpdate()  <span class="comment">//state已经改变</span></span><br><span class="line">render() <span class="comment">// 新的卡片添加到虚拟dom中</span></span><br><span class="line">componentDidUpdate() <span class="comment">// 此时添加卡片的操作才算完成，新的卡片才添加到真正的DOM结构中</span></span><br></pre></td></tr></table></figure>
+<p>所以我们能想到，要延后一个进程去执行滚动事件，在componentDidUpdate阶段获取到的scrollHeight才是添加了新卡片dom的滚动条高度，所以上面的滚动方法可以改成下面这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">scrollToBottom = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> content = <span class="keyword">this</span>.listPage;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        content.scrollTop = content.scrollHeight - <span class="built_in">window</span>.document.body.clientHeight;</span><br><span class="line">    &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 或者在直接将scrollToBottom延后一个进程，修改handleAdd事件</span></span><br><span class="line">setTimeout(<span class="keyword">this</span>.scrollToBottom, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tip：滚动的元素，一定是子元素的高度高于父元素的高度，并且父元素设置了overflow:auto or scroll，此时对父元素添加scrollTop才生效</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.printStr(<span class="number">1</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line">setTimeout(<span class="keyword">this</span>.printStr(<span class="number">2</span>), <span class="number">0</span>);</span><br><span class="line">setTimeout(<span class="keyword">this</span>.printStr, <span class="number">0</span>);</span><br><span class="line">printStr = <span class="function">(<span class="params">n</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(n);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 执行结果： 2 1 undifined</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上的几个场景基本上就是最近一个月的踩坑史，因为对生命周期的理解欠缺，导致出了很多的bug，遂作此篇。出bug并不丢人，写代码是一种修行。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">场景</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">use</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">redux</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +338,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/12/21/%E5%A4%A7%E8%AF%9Dreact%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/12/22/js-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          js 深浅拷贝
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/11/Charles/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Charles</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#要点概述"><span class="toc-number">1.</span> <span class="toc-text">要点概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生命周期阶段概述"><span class="toc-number">2.</span> <span class="toc-text">生命周期阶段概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#父子组件的生命周期"><span class="toc-number">3.</span> <span class="toc-text">父子组件的生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例-amp-amp-场景"><span class="toc-number">4.</span> <span class="toc-text">实例 &amp;&amp; 场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#路由参数的变化，刷新页面"><span class="toc-number">4.1.</span> <span class="toc-text">路由参数的变化，刷新页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓存页面数据"><span class="toc-number">4.2.</span> <span class="toc-text">缓存页面数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#判断登录态的时机"><span class="toc-number">4.3.</span> <span class="toc-text">判断登录态的时机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#render函数"><span class="toc-number">4.4.</span> <span class="toc-text">render函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数缓存时机"><span class="toc-number">4.5.</span> <span class="toc-text">参数缓存时机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#点击空白处关闭弹窗"><span class="toc-number">4.6.</span> <span class="toc-text">点击空白处关闭弹窗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scrollTop滚动时机"><span class="toc-number">4.7.</span> <span class="toc-text">scrollTop滚动时机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="大话react生命周期" data-title="大话react生命周期" data-url="http://yoursite.com/2018/12/21/%E5%A4%A7%E8%AF%9Dreact%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +500,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

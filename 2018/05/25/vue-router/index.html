@@ -6,16 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>后台管理实现按钮级别的权限控制（小记） | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求：后台管理实现按钮级别的权限控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后台管理实现按钮级别的权限控制（小记）">
+<meta property="og:url" content="http://yoursite.com/2018/05/25/vue-router/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求：后台管理实现按钮级别的权限控制">
+<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/d83fac1bly1frm81k0xygj21610r0jtw.jpg">
+<meta property="article:published_time" content="2018-05-25T05:53:30.000Z">
+<meta property="article:modified_time" content="2018-05-26T13:24:05.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="vue-router">
+<meta property="article:tag" content="vuex">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/d83fac1bly1frm81k0xygj21610r0jtw.jpg">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
   
@@ -169,83 +176,135 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-vue-router" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      后台管理实现按钮级别的权限控制（小记）
+    </h1>
+  
+
+        
+        <a href="/2018/05/25/vue-router/" class="archive-article-date">
+  	<time datetime="2018-05-25T05:53:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-25</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求：后台管理实现按钮级别的权限控制</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+
+<p>解释：后台系统为公司内部人员使用，使用人的职位不同（即角色不同），则可以操作的权限不同，如超级管理员，可以定义不同角色，分配账号，分配权限菜单，高级运营可以审核信息，普通运营可以编辑文章等，不同的角色可以使用的菜单项不同，所以他们能够看到的菜单项也不一样，按钮级别的权限控制，顾名思义，就是要将权限做到按钮级别，就是不仅他们能够看到的菜单项不一样，可以使用的按钮也不一样，比如对用户的管理，涉及到“新增、编辑、删除、拉黑”，作为超级管理员，我可以操作任何一项，作为运营，我可以拉黑用户，但是作为客服，我只能看，剩下什么都做不了。（这些只是前端做的页面级的权限验证，后台也会根据token验证用户的权限的）（如下图所示）</p>
+<p><img src="http://wx2.sinaimg.cn/mw690/d83fac1bly1frm81k0xygj21610r0jtw.jpg" alt="菜单示意图"></p>
+<p>描述：项目基于vue，使用了vuex+vue-router，模板为<a href="http://element-cn.eleme.io/#/zh-CN/component/installation" target="_blank" rel="noopener">Element</a></p>
+<p>所以上述的需求可以解释为如下：</p>
+<blockquote>
+<p>不同的权限对应不同路由，同时侧边栏也需根据不同的权限，异步生成</p>
+</blockquote>
+<p>思路：</p>
+<ol>
+<li><p>后台中的拥有最大权限的角色是超级管理员，所以他能够使用的菜单和按钮一定是最全的，也就是在需求确定的前提下，组件是确定的，即全部的菜单项是确定的，通常格式如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> asyncRouterMap = [</span><br><span class="line">    &#123;</span><br><span class="line">        path: <span class="string">'/course'</span>,</span><br><span class="line">        component: Layout,</span><br><span class="line">        redirect: <span class="string">'/course/list'</span>,</span><br><span class="line">        meta: &#123;</span><br><span class="line">            icon: <span class="string">'table'</span>,</span><br><span class="line">            id: <span class="number">11</span></span><br><span class="line">        &#125;,</span><br><span class="line">        children: [</span><br><span class="line">            &#123;</span><br><span class="line">                path: <span class="string">'type'</span>,</span><br><span class="line">                component: _import(<span class="string">'course/type'</span>),</span><br><span class="line">                meta: &#123; <span class="attr">title</span>: <span class="string">'courseType'</span>, <span class="attr">icon</span>: <span class="string">'course-type'</span>, <span class="attr">id</span>: <span class="number">12</span> &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                path: <span class="string">'child-type'</span>,</span><br><span class="line">                component: _import(<span class="string">'course/child-type'</span>),</span><br><span class="line">                meta: &#123; <span class="attr">title</span>: <span class="string">'childType'</span>, <span class="attr">icon</span>: <span class="string">'child-type'</span>, <span class="attr">id</span>: <span class="number">13</span> &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                path: <span class="string">'list'</span>,</span><br><span class="line">                component: _import(<span class="string">'course/index'</span>),</span><br><span class="line">                meta: &#123; <span class="attr">title</span>: <span class="string">'courseList'</span>, <span class="attr">icon</span>: <span class="string">'course-list'</span>, <span class="attr">id</span>: <span class="number">14</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// id 事先不可知，在后台增加了菜单项之后才知道id，所有的菜单项是固定的，所以后期如果新增菜单项，这里改动也不会太大</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure></li>
+<li><p>登录成功后，服务端返回token，根据这个token去拉取对应的菜单和按钮列表，后台返回的数据格式如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    id: <span class="number">11</span>, <span class="attr">name</span>: <span class="string">"课程管理"</span>, <span class="attr">buttonNames</span>: <span class="literal">null</span>,<span class="attr">children</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        id: <span class="number">12</span>, <span class="attr">name</span>: <span class="string">'课程类目'</span> buttonNames: [<span class="string">'添加'</span>]</span><br><span class="line">      &#125;，</span><br><span class="line">      &#123;</span><br><span class="line">        id: <span class="number">13</span>, <span class="attr">name</span>: <span class="string">'课程子类目'</span> buttonNames: [<span class="string">'添加'</span>,<span class="string">'编辑'</span>, <span class="string">'删除'</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>数据和路由都写好了，接下来就是做匹配了。用返回的菜单和路由做匹配，返回可以操作的路由，再通过router.addRoutes动态挂载路由，添加用户可以访问的路由，这里用到了导航守卫，我的理解是，存在管理员可能会在你操作数据，使用后台的同时，无论是有意还是无意的，可能去更改你的权限，为你增加或者减少权限，所以在每一次页面跳转都会去重新获取一遍菜单列表（这里为了提升用户体验，做了30分钟的缓存），并且在匹配菜单的时候，还会根据当前的地址，查询当前页面对应的操作按钮，之所以这样做，考虑到的是匹配路由也需要遍历菜单列表，如果到每个组件mounted的时候再去遍历菜单列表得到操作按钮，就相当于多做了一次遍历操作，而且这样造成的结果就会是页面有延迟，所以就合在了一起：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在每次页面跳珠之前，在有token的前提下生成路由</span></span><br><span class="line">router.beforeEach(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (getToken()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (to.path === <span class="string">'/login'</span>) &#123;</span><br><span class="line">            next(&#123; <span class="attr">path</span>: <span class="string">'/'</span> &#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            store.dispatch(<span class="string">'GenerateRoutes'</span>, &#123;</span><br><span class="line">                isNow: <span class="literal">false</span>,</span><br><span class="line">                path: to.path</span><br><span class="line">            &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123; <span class="comment">// 根据roles权限生成可访问的路由表</span></span><br><span class="line">                router.addRoutes(store.getters.addRouters); <span class="comment">// 动态添加可访问路由表</span></span><br><span class="line">            &#125;);</span><br><span class="line">            next();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        next();</span><br><span class="line">        next(<span class="string">'/login'</span>); <span class="comment">// 否则全部重定向到登录页</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><p>使用vuex管理路由表，根据vuex中可访问的路由渲染侧边栏组件，根据vuex中生成的操作按钮渲染当前页面内的操作按钮：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">GenerateRoutes(&#123; commit &#125;, data) &#123;</span><br><span class="line">    <span class="comment">// 这里自己封装了请求缓存函数</span></span><br><span class="line">    networkRequest(&#123;</span><br><span class="line">        url: <span class="string">'/permission/ht/getMenuList'</span>,</span><br><span class="line">        method: <span class="string">'get'</span></span><br><span class="line">    &#125;, response =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> accessedRouters;</span><br><span class="line">        <span class="built_in">console</span>.time(<span class="string">'路由生成时间'</span>);</span><br><span class="line">        accessedRouters = filterAsyncRouter(asyncRouterMap, response, data.path);</span><br><span class="line">        <span class="comment">// 侧边栏路由和当前页面操作按钮分离为两个状态</span></span><br><span class="line">        commit(<span class="string">'SET_ROUTERS'</span>, accessedRouters);</span><br><span class="line">        commit(<span class="string">'SET_BTNS'</span>, buttonNames);</span><br><span class="line">        <span class="built_in">console</span>.timeEnd(<span class="string">'路由生成时间'</span>);</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        cacheName: <span class="string">'menubar'</span>,</span><br><span class="line">        cacheTime: <span class="number">1800000</span>,</span><br><span class="line">        isNow: data.isNow</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>匹配路由，之所以我们能够对菜单列表和路由做匹配，是因为定义路由的时候配置了meta字段（<a href="https://router.vuejs.org/zh/guide/advanced/meta.html" target="_blank" rel="noopener">路由元信息</a>），通过对比菜单列表的id和路由的id，返回路由信息</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buttonNames = [];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasPermission</span>(<span class="params">menuArr, route</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (route.meta &amp;&amp; route.meta.id) &#123;</span><br><span class="line">        <span class="keyword">let</span> childIndex = menuArr.findIndex(<span class="function"><span class="params">item</span> =&gt;</span> item.id === route.meta.id);</span><br><span class="line">        <span class="keyword">if</span> (childIndex !== <span class="number">-1</span>) &#123;</span><br><span class="line">            <span class="comment">// 渲染侧边栏的时候，也是通过设置meta 的title属性的，将菜单列表返回的菜单名字赋给title</span></span><br><span class="line">            route.meta.title = menuArr[childIndex].name;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> childIndex !== <span class="number">-1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filterAsyncRouter</span>(<span class="params">asyncRouterMap, menuArr, path</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> accessedRouters = asyncRouterMap.filter(<span class="function"><span class="params">route</span> =&gt;</span> &#123;</span><br><span class="line">       <span class="comment">//判断当前路由是否是用户可访问的路由</span></span><br><span class="line">        <span class="keyword">if</span> (hasPermission(menuArr, route)) &#123;</span><br><span class="line">            <span class="comment">// 如果当前路由可以访问，再去匹配子路由</span></span><br><span class="line">            <span class="keyword">if</span> (route.children &amp;&amp; route.children.length) &#123;</span><br><span class="line">                <span class="keyword">if</span> (route.meta &amp;&amp; route.meta.id) &#123;</span><br><span class="line">                    <span class="keyword">let</span> childArr = [];</span><br><span class="line">                    <span class="keyword">if</span> (menuArr.find(<span class="function"><span class="params">item</span> =&gt;</span> item.id === route.meta.id)) &#123;</span><br><span class="line">                        <span class="keyword">let</span> childIndex = menuArr.findIndex(<span class="function"><span class="params">item</span> =&gt;</span> item.id === route.meta.id);</span><br><span class="line">                        route.meta.title = menuArr[childIndex].name;</span><br><span class="line">                        childArr = menuArr[childIndex].children;</span><br><span class="line">                        <span class="keyword">if</span> (path) &#123;</span><br><span class="line">                            <span class="comment">// 判断当前的路由和当前页面的一级路由是否一致,如果一致,查询二级路由下的操作按钮</span></span><br><span class="line">                            <span class="keyword">let</span> pathArr = path.split(<span class="string">'/'</span>);</span><br><span class="line">                            <span class="keyword">if</span> (route.path === <span class="string">`/<span class="subst">$&#123;pathArr[<span class="number">1</span>]&#125;</span>`</span>) &#123;</span><br><span class="line">                                <span class="keyword">let</span> index = route.children.findIndex(<span class="function"><span class="params">item</span> =&gt;</span> item.path === pathArr[<span class="number">2</span>]);</span><br><span class="line">                                buttonNames = childArr.find(<span class="function"><span class="params">item</span> =&gt;</span> item.id === route.children[index].meta.id).buttonNames;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    route.children = filterAsyncRouter(route.children, childArr);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> accessedRouters;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成侧边栏,使用的是Element的NavMenu组件。遍历生成的路由即可，菜单的名字使用的是meta的title。</p>
+</li>
+<li><p>生成按钮，用computed计算得到vuex中的按钮名称数组，实际上页面内已经写好所有的按钮和绑定函数了，这里直接用v-if进行渲染。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-button</span>  @<span class="attr">click</span>=<span class="string">"handleCreate"</span>  <span class="attr">v-if</span>=<span class="string">"buttonNames.includes('添加')"</span>&gt;</span>添加<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">    buttonNames() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.$store.state.permission.btnArr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>此后台是在<a href="https://github.com/PanJiaChen/vue-element-admin" target="_blank" rel="noopener">vue-element-admin</a>的基础上更改的，我认为他做的就非常好，而且读懂他的代码后，再去完成自己的需求，会变得容易很多，还有详细的参考文档，我是从去年12月份开始使用这个模板的，从这项目学到了很多东西，也是这个项目给我指明了一些学习方向，勾起了我的探索兴趣，非常感谢。<br>从这里你可以学到的：</p>
+<ol>
+<li>更好的理解登录权限控制</li>
+<li>更好的编码习惯和思考习惯</li>
+</ol>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><ol>
+<li><a href="https://juejin.im/post/591aa14f570c35006961acac#heading-10" target="_blank" rel="noopener">手摸手，带你用vue撸后台 系列二(登录权限篇)</a></li>
+</ol>
+<h3 id="分享阅读清单"><a href="#分享阅读清单" class="headerlink" title="分享阅读清单"></a>分享阅读清单</h3><ol>
+<li><a href="https://github.com/Amery2010/HEAD#%E6%9C%80%E5%B0%8F%E6%8E%A8%E8%8D%90" target="_blank" rel="noopener">head部分的清单</a></li>
+</ol>
+<h4 id="meta-标签"><a href="#meta-标签" class="headerlink" title="meta 标签"></a>meta 标签</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"x-ua-compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span><span class="comment">&lt;!-- † --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, shrink-to-fit=no"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 以上3个meta标签必须放在head之前，以确保文档的正确呈现 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 强制 IE 8/9/10 使用其最新的渲染引擎 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"x-ua-compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 360浏览器选择渲染引擎 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"renderer"</span> <span class="attr">content</span>=<span class="string">"webkit|ie-comp|ie-stand"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- QQ浏览器在指定方向上锁定屏幕（锁定横/竖屏） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"x5-orientation"</span> <span class="attr">content</span>=<span class="string">"landscape/portrait"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- QQ浏览器全屏显示此页面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"x5-fullscreen"</span> <span class="attr">content</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- QQ浏览器页面将以“应用模式”显示（全屏等）--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"x5-page-mode"</span> <span class="attr">content</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- UC浏览器 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 在指定方向上锁定屏幕（锁定横/竖屏） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"screen-orientation"</span> <span class="attr">content</span>=<span class="string">"landscape/portrait"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 全屏显示此页面 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"full-screen"</span> <span class="attr">content</span>=<span class="string">"yes"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 即使在“文本模式”下，UC 浏览器也会显示图片 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"imagemode"</span> <span class="attr">content</span>=<span class="string">"force"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 页面将以“应用模式”显示（全屏、禁止手势等） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"browsermode"</span> <span class="attr">content</span>=<span class="string">"application"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 在此页面禁用 UC 浏览器的“夜间模式” --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"nightmode"</span> <span class="attr">content</span>=<span class="string">"disable"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 简化页面，减少数据传输 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"layoutmode"</span> <span class="attr">content</span>=<span class="string">"fitscreen"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 禁用的 UC 浏览器的功能，“当此页面中有较多文本时缩放字体” --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"wap-font-scale"</span> <span class="attr">content</span>=<span class="string">"no"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><a href="https://juejin.im/post/5b0284ac51882542ad774c45" target="_blank" rel="noopener">解锁多种JavaScript数组去重姿势</a></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 执行效率最高的两种数组去重的方法,arr为待去重的数组</span></span><br><span class="line"><span class="keyword">const</span> tmp = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line"><span class="keyword">return</span> arr.filter(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!tmp.has(item) &amp;&amp; tmp.set(item, <span class="number">1</span>));</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 或者使用set</span></span><br><span class="line"><span class="keyword">let</span> newArr = [...new <span class="built_in">Set</span>(arr)]</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">vue-router</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vuex</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +317,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/25/vue-router/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/06/23/optimize-first-screen/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          关于首屏优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/12/memory/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">node js 处理内存泄漏</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文档"><span class="toc-number">1.</span> <span class="toc-text">参考文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分享阅读清单"><span class="toc-number">2.</span> <span class="toc-text">分享阅读清单</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#meta-标签"><span class="toc-number">2.1.</span> <span class="toc-text">meta 标签</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="vue-router" data-title="后台管理实现按钮级别的权限控制（小记）" data-url="http://yoursite.com/2018/05/25/vue-router/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +479,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>node js 爬取小说并插入数据库 | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求：使用node.js实现爬取“八一八中文网”的小说列表、章节、内容，并连接mysql，将爬取数据插入到数据库中。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="node js 爬取小说并插入数据库">
+<meta property="og:url" content="http://yoursite.com/2018/03/31/node/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求：使用node.js实现爬取“八一八中文网”的小说列表、章节、内容，并连接mysql，将爬取数据插入到数据库中。">
+<meta property="article:published_time" content="2018-03-31T05:53:30.000Z">
+<meta property="article:modified_time" content="2018-04-02T13:13:49.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="node js">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="爬虫">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
@@ -169,83 +174,120 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-node" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
+    <h1 class="article-title" itemprop="name">
+      node js 爬取小说并插入数据库
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
+        
+        <a href="/2018/03/31/node/" class="archive-article-date">
+  	<time datetime="2018-03-31T05:53:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-31</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求：使用node.js实现爬取“八一八中文网”的小说列表、章节、内容，并连接mysql，将爬取数据插入到数据库中。</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
 
-        <div class="article-info info-on-right">
-          
+
+<p>技术储备：ES6 + node js + jquery + mysql (必须)<br>        nunjucks js + webpack + express (非必须)</p>
+<p>&npsp;&npsp;总结我这一周都做了哪些事，乱七八糟的看了不少，代码也敲了不少，然而实际产出却觉得没有多少，可能是我学习方式有问题，导致的学习效率不高。这一周看node看了应该说是一天半，<a href="http://www.expressjs.com.cn/4x/api.html#app.all" target="_blank" rel="noopener">express</a>看了一天半（推荐阅读的<a href="https://bignerdcoding.com/archives/41.html" target="_blank" rel="noopener">express讲解</a>），<a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014713964925087c29166d8c344a949364e40e2f28dc09000" target="_blank" rel="noopener">nunjucks</a>看了小半天，<a href="http://www.browsersync.cn/" target="_blank" rel="noopener">browser-sync</a>也配置了小半天，弄热更新弄了小半天，捣鼓来捣鼓去的也没有产出，明明都能够检测到我更新了js，但是浏览器没有刷新。navicat连接本地mysql弄了大半天，对了，处理gbk网页中文乱码还花费了大半天的时间实际上我真正用来产出实际内容只有一天的时间，完成了爬取30本小说，不得不佩服这些写小说的，一本小说八百多章，以一次下载五章的并发速度，下载这30本书花了好几分钟，实际上爬取速度很快，插入到数据库中的速度比较慢。</p>
+<p>点击查看<a href="https://github.com/rainydayDY/node-reader-crawler" target="_blank" rel="noopener">项目源码</a>，欢迎star</p>
+<h2 id="思路梳理"><a href="#思路梳理" class="headerlink" title="思路梳理"></a>思路梳理</h2><ol>
+<li>首先找到目标网址，分析网页结构；</li>
+<li>发送请求到目标网址。</li>
+<li>解析返回的网页，提取数据，插入数据库。<h2 id="知识梳理"><a href="#知识梳理" class="headerlink" title="知识梳理"></a>知识梳理</h2><h3 id="ES6-Promise-实现异步"><a href="#ES6-Promise-实现异步" class="headerlink" title="ES6 Promise 实现异步"></a>ES6 Promise 实现异步</h3>&nbsp;&nbsp;考虑到需求，所以使用promise：</li>
+<li>请求和处理是要分开的；（请求网址，返回网页，解析网页）</li>
+<li>请求的不同部分也是作为模块进行分离；（爬取列表页、章节页、内容页）</li>
+<li>请求的url不止一个（一本小说包含若干个章节）<blockquote>
+<p>Promise: 简单来说就是一个容器，里面保存着异步操作的结果，new Promise()创建实例，用then方法来接收异步操作的结果。Promise.all()将多个Promise实例包装成一个新的Promise实例。</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">createPromise() &#123;</span><br><span class="line">    <span class="keyword">let</span> options = &#123;</span><br><span class="line">        url: <span class="string">'https://www.zwdu.com'</span>,</span><br><span class="line">        type: <span class="string">'GET'</span></span><br><span class="line">    &#125;        </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        options.callback = <span class="function">(<span class="params">data, _setCookie</span>) =&gt;</span> &#123;</span><br><span class="line">            resolve(data)</span><br><span class="line">        &#125;</span><br><span class="line">        request(options, <span class="literal">null</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">seek(callback) &#123;</span><br><span class="line">    <span class="keyword">let</span> promise = <span class="built_in">Promise</span>.all([</span><br><span class="line">        <span class="keyword">this</span>.createPromise(arr[<span class="number">0</span>][<span class="string">'url'</span>]),</span><br><span class="line">        <span class="keyword">this</span>.createPromise(arr[<span class="number">1</span>][<span class="string">'url'</span>]),</span><br><span class="line">        <span class="keyword">this</span>.createPromise(arr[<span class="number">2</span>][<span class="string">'url'</span>]),</span><br><span class="line">        <span class="keyword">this</span>.createPromise(arr[<span class="number">3</span>][<span class="string">'url'</span>]),</span><br><span class="line">        <span class="keyword">this</span>.createPromise(arr[<span class="number">4</span>][<span class="string">'url'</span>])</span><br><span class="line">    ]);</span><br><span class="line">    promise.then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;&#125;)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="node-Request-爬取网页"><a href="#node-Request-爬取网页" class="headerlink" title="node Request 爬取网页"></a>node Request 爬取网页</h3><p>&nbsp;&nbsp;node js http模块有get和request两个方法，用哪个都可以，我用的是request方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> URL = url.parse(options.url);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> requestOptions = &#123;</span><br><span class="line">    host: URL.hostname,</span><br><span class="line">    port: URL.port,</span><br><span class="line">    path: URL.path,</span><br><span class="line">    method: <span class="string">'GET'</span>,</span><br><span class="line">    headers: &#123;</span><br><span class="line">        Cookie: cookie</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> req = http.request(requestOptions, (res) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> html = [];</span><br><span class="line">    res.on(<span class="string">'data'</span>, result =&gt; &#123;</span><br><span class="line">        html.push(result);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    res.on(<span class="string">'end'</span>, () =&gt; &#123;</span><br><span class="line">        options.callback &amp;&amp; options.callback(html, res.headers[<span class="string">'set-cookie'</span>])</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">req.on(<span class="string">'error'</span>, e =&gt; &#123;</span><br><span class="line">  options.callback &amp;&amp; options.callback(e)</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">req.end();</span><br></pre></td></tr></table></figure>
+<h3 id="iconv-lite-解决中文乱码"><a href="#iconv-lite-解决中文乱码" class="headerlink" title="iconv-lite 解决中文乱码"></a>iconv-lite 解决中文乱码</h3><p>&nbsp;&nbsp;因为爬取的网站的编码方式是gbk，所以request返回的结果就是‘****’，还伴随乱码，所以使用了iconv-lite，在解决乱码的时候花了很长时间，因为按照官方文档的例子，给结果设置了编码方式如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.setEncoding(<span class="string">'UTF-8'</span>);</span><br></pre></td></tr></table></figure>
+<p>导致直接输出结果的时候，返回的是html结构，只不过原来的网页内容变成了小星星，所以考虑到这是乱码了，用了官方提供的iconv-lite后，直接push(result)，结果报错，报的错是Buffer.concat的不是数组，可是事实就是数组啊，后来查阅Buffer，发现网页设置编码后返回的根本就不是buffer，所以你调用buffer的方法就会报错，除非你在push结果的时候采用如下方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html.push(Buffer.alloc(result.length,result));</span><br></pre></td></tr></table></figure>
+<p>相当于把返回的结果又转换成Buffer了，所以报错结束，但是，乱码不是小星星，又变成难懂的文字了，总之还是乱码，到现在我也不清楚为什么，只是把setEncoding去掉就好了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> iconv = <span class="built_in">require</span>(<span class="string">'iconv-lite'</span>);</span><br><span class="line"><span class="keyword">let</span> htmlLength = <span class="number">0</span>;</span><br><span class="line">res.on(<span class="string">'data'</span>, result =&gt; &#123;</span><br><span class="line">    html.push(Buffer.alloc(result.length,result));</span><br><span class="line">    htmlLength += result.length;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">res.on(<span class="string">'end'</span>, () =&gt; &#123;</span><br><span class="line">    options.callback &amp;&amp; options.callback(iconv.decode(Buffer.concat(html,htmlLength), <span class="string">'gbk'</span>), res.headers[<span class="string">'set-cookie'</span>])</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="cherrio-解析网页"><a href="#cherrio-解析网页" class="headerlink" title="cherrio 解析网页"></a>cherrio 解析网页</h3><p>语法同jquery</p>
+<h3 id="node-连接-mysql"><a href="#node-连接-mysql" class="headerlink" title="node 连接 mysql"></a>node 连接 mysql</h3><p>&nbsp;&nbsp;这里有一个问题，就是如果模块之间都有依赖，则在第一个模块连接数据库，最后一个模块断开连接，否则会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mysql = <span class="built_in">require</span>(<span class="string">'mysql'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> connection = mysql.createConnection(&#123;</span><br><span class="line">    host: <span class="string">'localhost'</span>,</span><br><span class="line">    user: <span class="string">'root'</span>,</span><br><span class="line">    password: <span class="string">''</span>,</span><br><span class="line">    database: <span class="string">'reader'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">connection.connect();</span><br><span class="line"><span class="keyword">let</span> itemObj = &#123;</span><br><span class="line">    id: index,</span><br><span class="line">    novelId: parIndex,</span><br><span class="line">    name: $(<span class="string">'.bookname'</span>).children(<span class="string">'h1'</span>).text(),</span><br><span class="line">    content: $(<span class="string">'#content'</span>).text()</span><br><span class="line">&#125;</span><br><span class="line">connection.query(<span class="string">'INSERT INTO chapter SET ?'</span>, itemObj, (error, data) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (error) <span class="keyword">throw</span> error</span><br><span class="line">&#125;)</span><br><span class="line">connection.end();</span><br></pre></td></tr></table></figure>
+<p>最后，整个项目用到的依赖包：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"cheerio"</span>: <span class="string">"^1.0.0-rc.2"</span>,</span><br><span class="line">  <span class="string">"iconv-lite"</span>: <span class="string">"^0.4.19"</span>,</span><br><span class="line">  <span class="string">"mysql"</span>: <span class="string">"^2.15.0"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">node js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
+        		</li>
+      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
         		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
-        		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +300,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/31/node/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/04/14/nodeStudy/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          node js 处理PDF文件
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/25/react/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">React 学习笔记</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#思路梳理"><span class="toc-number">1.</span> <span class="toc-text">思路梳理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#知识梳理"><span class="toc-number">2.</span> <span class="toc-text">知识梳理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ES6-Promise-实现异步"><span class="toc-number">2.1.</span> <span class="toc-text">ES6 Promise 实现异步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#node-Request-爬取网页"><span class="toc-number">2.2.</span> <span class="toc-text">node Request 爬取网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iconv-lite-解决中文乱码"><span class="toc-number">2.3.</span> <span class="toc-text">iconv-lite 解决中文乱码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cherrio-解析网页"><span class="toc-number">2.4.</span> <span class="toc-text">cherrio 解析网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#node-连接-mysql"><span class="toc-number">2.5.</span> <span class="toc-text">node 连接 mysql</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="node" data-title="node js 爬取小说并插入数据库" data-url="http://yoursite.com/2018/03/31/node/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +462,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

@@ -6,15 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>Charles | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求： 完成移动端H5抓包，分析请求，解决https请求出现的乱码问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Charles">
+<meta property="og:url" content="http://yoursite.com/2018/12/11/Charles/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求： 完成移动端H5抓包，分析请求，解决https请求出现的乱码问题。">
+<meta property="article:published_time" content="2018-12-11T08:38:57.000Z">
+<meta property="article:modified_time" content="2018-12-21T03:48:40.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="移动端抓包">
+<meta property="article:tag" content="https乱码">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
@@ -169,83 +173,151 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Charles" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Charles
+    </h1>
+  
+
+        
+        <a href="/2018/12/11/Charles/" class="archive-article-date">
+  	<time datetime="2018-12-11T08:38:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-11</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求： 完成移动端H5抓包，分析请求，解决https请求出现的乱码问题。</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+
+<h2 id="使用背景"><a href="#使用背景" class="headerlink" title="使用背景"></a>使用背景</h2><p>在移动端开发中，我们无法像PC端那样可以直接查看请求，判断请求是否发对，返回的结果是否没有被篡改，请求对于我们来讲，就是透明的，不可见的，尤其是每个人操作习惯的不同，导致程序的隐藏bug出现时，我们不能直接凭经验判断出bug的由来，请求的发送顺序等，所以抓包工具的使用在移动端开发中，显得十分必要。</p>
+<h2 id="工具安装"><a href="#工具安装" class="headerlink" title="工具安装"></a>工具安装</h2><ol>
+<li><a href="https://www.charlesproxy.com/latest-release/download.do" target="_blank" rel="noopener">官网下载</a>;</li>
+<li><a href="https://pan.baidu.com/s/15DIgEm_5AcrCbYQ7kLxlRA" target="_blank" rel="noopener">破解版jar包</a> 提取码：qxa2<br>破解jar包使用方式：右击Charles &gt; 显示包内容 &gt; Contents &gt; Java &gt; 替换charles.jar(使用破解版jar包来替换)</li>
+</ol>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><h3 id="HTTP请求"><a href="#HTTP请求" class="headerlink" title="HTTP请求"></a>HTTP请求</h3><p>对于普通的请求，如果查看请求的方式和返回结果，直接对使用的设备配置代理即可；代理服务器为本机mac的ip，端口号为8888，这样你在charles上就可以看到客户端发出的请求了，如果你在本地进行开发，想查看本地代码在客户端的预览效果，也可以通过代理的方式<br><strong><em>方案1</em></strong></p>
+<ol>
+<li>将localhost改为ip，如localhost:3005可以改成192.168.1.128: 3005 OR 配置hosts文件，将127.0.0.1指向一个自定义域名如lc.dy.com</li>
+<li>安装浏览器插件FE Helper，将链接生成二维码，手机扫描二维码即可；</li>
+<li>手机端配置代理，charles即可捕捉到请求</li>
+</ol>
+<p><strong><em>方案2</em></strong></p>
+<ol>
+<li>安装浏览器插件FE Helper，将链接(localhost:3005)生成二维码，手机扫描二维码即可；</li>
+<li>手机端配置代理，charles即可捕捉到请求</li>
+</ol>
+<p><strong><em>方案3</em></strong></p>
+<ol>
+<li><p>此方法适用于，app内嵌h5，调试app内的h5页面，因为app的qa环境里面内嵌的是我们的qa环境，我们想要app的h5指向本地，需要改映射，将app内的h5的qa地址映射为我们本地的地址。</p>
+</li>
+<li><p>Tools &gt; Map Remote Settings &gt; Enable Map Remote &gt; Add</p>
+</li>
+<li><p>配置map from 和map to，即将原本要发到from的请求映射到to上的请求来。</p>
+<h3 id="HTTPS请求"><a href="#HTTPS请求" class="headerlink" title="HTTPS请求"></a>HTTPS请求</h3><p>HTTPS请求时加密过的请求，返回的结果会出现乱码，解决这种问题，需要三个步骤：</p>
+</li>
+<li><p>mac安装证书</p>
+</li>
+<li><p>客户端安装证书</p>
+</li>
+<li><p>mac配置代理</p>
+<h2 id="证书安装"><a href="#证书安装" class="headerlink" title="证书安装"></a>证书安装</h2><h3 id="mac安装证书步骤"><a href="#mac安装证书步骤" class="headerlink" title="mac安装证书步骤"></a>mac安装证书步骤</h3></li>
+<li><p>打开Charles，Help &gt; SSL Proxying &gt; Install Charles Root Certificate</p>
+</li>
+<li><p>自动打开的钥匙串访问 &gt; 搜索 Charles Proxy &gt; 双击 &gt; 点击信任，使用此证书时始终信任，默认会勾选所有项。</p>
+<h3 id="安卓手机安装证书的步骤："><a href="#安卓手机安装证书的步骤：" class="headerlink" title="安卓手机安装证书的步骤："></a>安卓手机安装证书的步骤：</h3></li>
+</ol>
+<p><strong><em>方案1</em></strong></p>
+<ol>
+<li>打开Charles，Help &gt; SSL Proxying &gt; Install Charles Root Certificate on a Mobile Device or Remote Browser</li>
+<li>手机配置代理，代理服务器为本机mac的ip，端口号为8888</li>
+<li>手机浏览器打开下载证书</li>
+<li>证书会自动下载，针对不同机型，有的可以成功，有的失败了，提示“无法安装证书”。</li>
+</ol>
+<p><strong><em>方案2</em></strong></p>
+<ol>
+<li>打开Charles，眼睛瞄到顶上菜单栏的 “ Help ” ，点开。</li>
+<li>SSL Proxying &gt; Save Charles Root Certificate &gt; 选择cer格式的文件</li>
+<li>传到微信里</li>
+<li>找到设置 &gt; 更多设置 &gt; 系统安全 &gt; 从SD卡读取证书 &gt; tentcent &gt; micromsg &gt; weixin &gt; download &gt; charles-ssl-proxying-certificate.cer（选中，即可安装）<h3 id="苹果手机安装证书步骤"><a href="#苹果手机安装证书步骤" class="headerlink" title="苹果手机安装证书步骤"></a>苹果手机安装证书步骤</h3></li>
+<li>打开Charles，Help &gt; SSL Proxying &gt; Install Charles Root Certificate on a Mobile Device or Remote Browser</li>
+<li>手机配置代理，代理服务器为本机mac的ip，端口号为8888</li>
+<li>手机浏览器打开下载证书，证书会自动下载，</li>
+<li>设置 &gt; 通用设置 &gt; 关于手机 &gt; 证书信任设置 &gt; 勾选已下载的证书文件<h3 id="配置代理"><a href="#配置代理" class="headerlink" title="配置代理"></a>配置代理</h3></li>
+<li>打开Charles, Proxy &gt; SSL Proxying Settings &gt; 勾选Enable SSL Proxying &gt; 点击Add（添加你要访问的https请求的域名和端口号）</li>
+<li>如果不知道对应域名和端口号，可以添加Host: Port:</li>
+<li>OK<h2 id="乱码缘由"><a href="#乱码缘由" class="headerlink" title="乱码缘由"></a>乱码缘由</h2><h3 id="为什么使用https"><a href="#为什么使用https" class="headerlink" title="为什么使用https?"></a>为什么使用https?</h3>http的不足：</li>
+</ol>
+<p>通信使用明文（不加密），内容可能被窃听<br>不验证通信双方的身份，因此有可能遭遇伪装<br>无法证明报文的完整性，所以有可能已遭篡改<br>tips 即使已经加密处理过的通信，在传输过程中，通信内容也是会被窥视到的，这点和未加密的通信相同，只是说加密后的报文的含义，难以破解，但是加密之后的报文本身还是可见的。</p>
+<h3 id="通信加密"><a href="#通信加密" class="headerlink" title="通信加密"></a>通信加密</h3><p>http协议中本身没有加密机制，但是可以通过和SSL(安全套接层)的组合使用，加密HTTP的通信内容，用SSL建立安全的通信线路之后，在这条线路上进行的HTTP通信协议被称为HTTPS。SSL不仅提供加密处理，还使用了证书，可用于确定通信方。证书由值得信任的第三方机构颁发，用以证明服务器和客户端是真实存在的。通过使用证书，以证明通信方式意料中的服务器。</p>
+<p>这也就解释了为什么在没有做任何配置的情况下，我们抓到的内容是乱码的。那为什么配置证书之后，就可以正常查看了呢？</p>
+<p>***未完待续</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
+<li><a href="https://malcolmyu.github.io/2017/02/26/Dive-into-Charles-HTTPS-Proxying/" target="_blank" rel="noopener">细说 Charles 配置 HTTPS 代理的乱码问题</a></li>
+<li><a href="https://www.cnblogs.com/wonyun/p/5586746.html" target="_blank" rel="noopener">charles本地调试之map和rewrite功能</a></li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">移动端抓包</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https乱码</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +330,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/12/11/Charles/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/12/21/%E5%A4%A7%E8%AF%9Dreact%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          大话react生命周期
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/10/js%E6%B5%AE%E7%82%B9%E6%95%B0%E7%B2%BE%E5%BA%A6%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">js浮点数精度问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用背景"><span class="toc-number">1.</span> <span class="toc-text">使用背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具安装"><span class="toc-number">2.</span> <span class="toc-text">工具安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP请求"><span class="toc-number">3.1.</span> <span class="toc-text">HTTP请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS请求"><span class="toc-number">3.2.</span> <span class="toc-text">HTTPS请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#证书安装"><span class="toc-number">4.</span> <span class="toc-text">证书安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mac安装证书步骤"><span class="toc-number">4.1.</span> <span class="toc-text">mac安装证书步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安卓手机安装证书的步骤："><span class="toc-number">4.2.</span> <span class="toc-text">安卓手机安装证书的步骤：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#苹果手机安装证书步骤"><span class="toc-number">4.3.</span> <span class="toc-text">苹果手机安装证书步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置代理"><span class="toc-number">4.4.</span> <span class="toc-text">配置代理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乱码缘由"><span class="toc-number">5.</span> <span class="toc-text">乱码缘由</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么使用https"><span class="toc-number">5.1.</span> <span class="toc-text">为什么使用https?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通信加密"><span class="toc-number">5.2.</span> <span class="toc-text">通信加密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">6.</span> <span class="toc-text">参考文章</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Charles" data-title="Charles" data-url="http://yoursite.com/2018/12/11/Charles/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +492,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

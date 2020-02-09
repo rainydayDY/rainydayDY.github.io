@@ -6,16 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | rainydayDY</title>
+  <title>首屏优化系列（一） | rainydayDY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="study &amp;&amp; make progress">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rainydayDY">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="需求描述：优化首屏加载速度，减少白屏时间。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="首屏优化系列（一）">
+<meta property="og:url" content="http://yoursite.com/2018/06/23/%E9%A6%96%E5%B1%8F%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
 <meta property="og:site_name" content="rainydayDY">
-<meta property="og:description" content="study &amp;&amp; make progress">
+<meta property="og:description" content="需求描述：优化首屏加载速度，减少白屏时间。">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/25/16434923b7a175ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="article:published_time" content="2018-06-23T05:53:30.000Z">
+<meta property="article:modified_time" content="2018-07-19T02:57:31.000Z">
 <meta property="article:author" content="rainydayDY">
+<meta property="article:tag" content="Promise">
+<meta property="article:tag" content="图片懒加载">
+<meta property="article:tag" content="路由懒加载">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/6/25/16434923b7a175ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
   
     <link rel="alternative" href="/atom.xml" title="rainydayDY" type="application/atom+xml">
   
@@ -169,83 +176,126 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-首屏优化系列（一）" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      首屏优化系列（一）
+    </h1>
+  
+
+        
+        <a href="/2018/06/23/%E9%A6%96%E5%B1%8F%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/" class="archive-article-date">
+  	<time datetime="2018-06-23T05:53:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-23</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>需求描述：优化首屏加载速度，减少白屏时间。</p>
+</blockquote>
+<p hidden><a id="more"></a></p>
+八一八本次项目中使用的优化手段，以及自己从中获得的知识。
+由于本次项目较为复杂，模块较多，（当然不比大型电商网站），首页的请求就有8个，并且是精简之后的，稍有不慎，白屏现象就会很严重。体验极差。
+## 首页模块划分
+1. 分类
+2. 轮播图
+3. 推荐
+4. 收藏数
+5. 购买数
+6. 案例展示
+7. 主内容展示
+8. 合作机构展示
+
+<p>其中位于首屏的是1、2、3、4、5，对于6在大屏幕上也会展示。</p>
+<h2 id="优化手段"><a href="#优化手段" class="headerlink" title="优化手段"></a>优化手段</h2><h3 id="Skeleton-Screen-骨架屏"><a href="#Skeleton-Screen-骨架屏" class="headerlink" title="Skeleton Screen (骨架屏)"></a>Skeleton Screen (骨架屏)</h3><p>&nbsp;&nbsp;简单来说，骨架屏就是在页面内容未加载完成的时候，先使用一些图形进行占位，待内容加载完成之后再把它替换掉。体验的效果就是，在页面完全渲染完成之前，用户会看到一个样式简单，描绘了当前页面的大致框架，能够感知到页面正在逐步加载，最终骨架屏中各个占位部分被完全替换。显示效果如下：<br><img src="https://user-gold-cdn.xitu.io/2018/6/25/16434923b7a175ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""><br>此处没有单独为整个页面写一个组件，而是为每个模块引入组件，如推荐课程这里显示5个课程，则在这部分数据的长度为0时，显示5个占位背景，当此模块数据请求完成，这部分就消失，显示真实数据。这种手段只用在了课程首页，因为只有这个页面内请求较多。此外这种写法也不易维护，很繁琐。</p>
+<h3 id="路由懒加载"><a href="#路由懒加载" class="headerlink" title="路由懒加载"></a>路由懒加载</h3><p>&nbsp;&nbsp;把不同路由对应的组件分割为不同的代码块，当路由被访问的时候，再加载对应的组件，对中大型项目来说，会显得很高效，对开发者而言，也方便维护。不过这里要对生产环境和开发环境做区分，因为如果项目很大的话，每次更改代码触发的热更新时间都会很长，所以只在生产环境中使用路由懒加载。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 生产环境  _import_production.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="params">file</span> =&gt;</span> <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'@/pages/'</span> + file + <span class="string">'.vue'</span>);</span><br><span class="line"><span class="comment">// 开发环境 _import_development.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="params">file</span> =&gt;</span> <span class="built_in">require</span>(<span class="string">'@/pages/'</span> + file + <span class="string">'.vue'</span>).default; <span class="comment">// vue-loader at least v13.0.0+</span></span><br><span class="line"><span class="comment">// router.js中引用</span></span><br><span class="line"><span class="keyword">const</span> _import = <span class="built_in">require</span>(<span class="string">'./_import_'</span> + process.env.NODE_ENV);</span><br><span class="line">&#123;</span><br><span class="line">    path: <span class="string">'course'</span>,</span><br><span class="line">    component: _import(<span class="string">'course/index'</span>),</span><br><span class="line">    name: <span class="string">'course'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="图片懒加载-vue-lazyload"><a href="#图片懒加载-vue-lazyload" class="headerlink" title="图片懒加载(vue-lazyload)"></a>图片懒加载(vue-lazyload)</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 安装</span></span><br><span class="line">npm install vue-lazyload --save-dev</span><br><span class="line"><span class="comment">// 使用 main.js</span></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App.vue'</span></span><br><span class="line"><span class="keyword">import</span> VueLazyload <span class="keyword">from</span> <span class="string">'vue-lazyload'</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueLazyload)</span><br><span class="line">Vue.use(VueLazyload, &#123;</span><br><span class="line">    preLoad: <span class="number">1.8</span>,</span><br><span class="line">    error: <span class="built_in">require</span>(<span class="string">'@/assets/lazy/error.png'</span>),</span><br><span class="line">    loading: <span class="built_in">require</span>(<span class="string">'@/assets/lazy/loading.png'</span>),</span><br><span class="line">    attempt: <span class="number">1</span>,</span><br><span class="line">    listenEvents: [<span class="string">'scroll'</span>]</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'body'</span>,</span><br><span class="line">  components: &#123;</span><br><span class="line">    App</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 在使用图片的地方加上v-lazy即可</span></span><br><span class="line">&lt;img v-lazy=<span class="string">"img.src"</span> &gt;</span><br></pre></td></tr></table></figure>
+<p>更多使用方式可参考<a href="https://github.com/hilongjw/vue-lazyload" target="_blank" rel="noopener">vue-lazyload</a><br>这里呈现的效果就是，请求完成数据，再去请求阿里云存放的图片，这个阶段中，图片资源加载过程中，显示loading的状态，加载完毕，显示图片，如果图片加载失败，显示失败的图片。</p>
+<h3 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h3><p>&nbsp;&nbsp;回到我们最初的问题，课程首页的请求数为8，请求都为异步请求，而我们的浏览器对同一域下的请求数量是有限制的，超过限制数目的请求会被阻塞，以谷歌浏览器的6个并发请求量为例，课程首页的数据请求和图片请求加起来成百上千个，上面，我们对图片请求已经做了处理，使用懒加载的方式，另外，放在和数据请求不同的域下，我们需要考虑的就是数据请求，目前为8个，我做过这样的测试，如果同时发出的话，每个请求的时间大概是50ms，当每次单独发送一个请求的时候，每个请求的请求时间大约十几毫秒，所以我当时的解决方案就是使用setTimeOut，进行延迟请求，这样做的话，我需要单独测试每个请求的时间，然后为他们写延迟时间，这样效率是很低的。此外，跟promise比，setTimeOut的执行优先级会降低，后来采用了promise的方式，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>采用这种方式的另一个原因是，如果所有异步请求同时触发的话，浏览器会为他们分配执行的优先级，而采用这种方式，请求的顺序会按照我们调用的顺序执行。而浏览器分配的话，可能页面底部的请求会先执行。在请求较少的情况下，这种差异是体现的不明显。</p>
+<p>提到promise，我觉得最大的好处就是如它设计的初衷那样，解决了层层回调的问题（难以维护，且不优雅）–链式调用，还有Promise.all()的用法，对于组合数据很方便。</p>
+<h3 id="浏览器缓存-localStorage"><a href="#浏览器缓存-localStorage" class="headerlink" title="浏览器缓存(localStorage)"></a>浏览器缓存(localStorage)</h3><p>对于不频繁修改的数据做了缓存，并且根据变换频率，缓存时间不同。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (cacheTime &lt; <span class="number">0</span>) cacheTime = <span class="number">3600000</span>;</span><br><span class="line"><span class="keyword">var</span> result = &#123; <span class="attr">data</span>: response.data, <span class="attr">expiration</span>: <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() + cacheTime &#125;;</span><br><span class="line">localStorage.setItem(cacheName, <span class="built_in">JSON</span>.stringify(result));</span><br></pre></td></tr></table></figure>
+<p>详细的缓存方法，已上传至github：<a href="https://github.com/rainydayDY/cacheRequest/blob/master/index.js" target="_blank" rel="noopener">前往查看</a></p>
+<h3 id="PageSpeed-Tools"><a href="#PageSpeed-Tools" class="headerlink" title="PageSpeed Tools"></a>PageSpeed Tools</h3><p>&nbsp;&nbsp;这个工具可以在谷歌的插件商店中下载，很好用，能列出所有需要优化的点。<br>本地所提示的图片问题，如使用浏览器缓存，需要在服务器设置etag和expire time<br>。<br>&nbsp;&nbsp;测试加载的时间可以用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.time(<span class="string">'加载时间'</span>);</span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">'加载时间'</span>);</span><br></pre></td></tr></table></figure>
+<p>参考文章：</p>
+<ol>
+<li><a href="https://juejin.im/post/5b0b7d74518825158e173a0c" target="_blank" rel="noopener">网站性能优化实战——从12.67s到1.06s的故事</a></li>
+<li><a href="https://mp.weixin.qq.com/s/3pX-qNO_dC6ijG3bXKzROg" target="_blank" rel="noopener">Event Loop浅谈</a></li>
+<li><a href="https://juejin.im/post/5b25e083e51d4558b27774b6" target="_blank" rel="noopener">JavaScript 工作原理之十一－渲染引擎及性能优化小技巧</a></li>
+<li><a href="https://juejin.im/post/5b1cf576f265da6e4e436d54" target="_blank" rel="noopener">基于Vue的SPA如何优化页面加载速度</a></li>
+<li><a href="https://xiaoiver.github.io/coding/2017/07/30/%E4%B8%BAvue%E9%A1%B9%E7%9B%AE%E6%B7%BB%E5%8A%A0%E9%AA%A8%E6%9E%B6%E5%B1%8F.html" target="_blank" rel="noopener">为vue项目添加骨架屏</a></li>
+<li><a href="https://blog.csdn.net/yishouwangnian/article/details/52788626" target="_blank" rel="noopener">浏览器允许的并发请求资源数是有限制的-分析</a></li>
+<li><a href="https://div.io/topic/745" target="_blank" rel="noopener">变态的静态资源缓存与更新 </a></li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢打赏<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx2.sinaimg.cn/mw690/d83fac1bly1g3yd0xnwh2j20yi1au43b.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://wx1.sinaimg.cn/mw690/d83fac1bly1g3yd0w43x7j20go0p0wh1.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-09-25T12:05:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/09/25/babel%E5%AD%A6%E4%B9%A0/">babel学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  	<time datetime="2019-08-11T10:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/11/puppeteer%E5%AD%A6%E4%B9%A0/">puppeteer学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Promise</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">UI自动化测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">图片懒加载</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能测试</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">路由懒加载</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -258,270 +308,145 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/23/%E9%A6%96%E5%B1%8F%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2019-06-11T12:35:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/06/25/read-book/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          算法 学习笔记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/23/optimize-first-screen/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于首屏优化</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/11/js%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">js实现文件下载</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blob</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">http header</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#优化手段"><span class="toc-number">1.</span> <span class="toc-text">优化手段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Skeleton-Screen-骨架屏"><span class="toc-number">1.1.</span> <span class="toc-text">Skeleton Screen (骨架屏)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#路由懒加载"><span class="toc-number">1.2.</span> <span class="toc-text">路由懒加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图片懒加载-vue-lazyload"><span class="toc-number">1.3.</span> <span class="toc-text">图片懒加载(vue-lazyload)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Promise"><span class="toc-number">1.4.</span> <span class="toc-text">Promise</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浏览器缓存-localStorage"><span class="toc-number">1.5.</span> <span class="toc-text">浏览器缓存(localStorage)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PageSpeed-Tools"><span class="toc-number">1.6.</span> <span class="toc-text">PageSpeed Tools</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-07T14:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/07/%E5%85%BC%E5%AE%B9%E7%9A%84%E6%BB%9A%E5%8A%A8%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E5%AE%9E%E7%8E%B0/">兼容的滚动吸顶效果实现</a>
-    </h1>
-  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="首屏优化系列（一）" data-title="首屏优化系列（一）" data-url="http://yoursite.com/2018/06/23/%E9%A6%96%E5%B1%8F%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">IntersectionObserve</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">sticky</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2019-04-10T10:07:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/10/nginx%E9%85%8D%E7%BD%AE/">nginx配置</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">https服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-03-15T08:22:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/15/webview%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">webview相关问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">软键盘遮挡</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">使用场景</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/" class="archive-article-date">
-  	<time datetime="2019-02-21T02:48:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/21/%E7%BB%84%E4%BB%B6%E9%94%80%E6%AF%81-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82/">组件销毁-取消请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">react</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">axios</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -545,8 +470,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
