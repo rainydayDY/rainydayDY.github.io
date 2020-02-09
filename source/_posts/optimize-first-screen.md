@@ -1,0 +1,110 @@
+---
+title: 关于首屏优化
+date: 2018-6-23 13:53:30
+tags:
+- Promise
+- 图片懒加载
+- 路由懒加载
+categories: 前端
+---
+> 需求描述：优化首屏加载速度，减少白屏时间。
+<p hidden><!--more--></p>
+八一八本次项目中使用的优化手段，以及自己从中获得的知识。
+由于本次项目较为复杂，模块较多，（当然不比大型电商网站），首页的请求就有8个，并且是精简之后的，稍有不慎，白屏现象就会很严重。体验极差。
+## 首页模块划分
+1. 分类
+2. 轮播图
+3. 推荐
+4. 收藏数
+5. 购买数
+6. 案例展示
+7. 主内容展示
+8. 合作机构展示
+
+其中位于首屏的是1、2、3、4、5，对于6在大屏幕上也会展示。
+## 优化手段
+### Skeleton Screen (骨架屏)
+&nbsp;&nbsp;简单来说，骨架屏就是在页面内容未加载完成的时候，先使用一些图形进行占位，待内容加载完成之后再把它替换掉。体验的效果就是，在页面完全渲染完成之前，用户会看到一个样式简单，描绘了当前页面的大致框架，能够感知到页面正在逐步加载，最终骨架屏中各个占位部分被完全替换。显示效果如下：
+![](https://user-gold-cdn.xitu.io/2018/6/25/16434923b7a175ef?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+此处没有单独为整个页面写一个组件，而是为每个模块引入组件，如推荐课程这里显示5个课程，则在这部分数据的长度为0时，显示5个占位背景，当此模块数据请求完成，这部分就消失，显示真实数据。这种手段只用在了课程首页，因为只有这个页面内请求较多。此外这种写法也不易维护，很繁琐。
+### 路由懒加载
+&nbsp;&nbsp;把不同路由对应的组件分割为不同的代码块，当路由被访问的时候，再加载对应的组件，对中大型项目来说，会显得很高效，对开发者而言，也方便维护。不过这里要对生产环境和开发环境做区分，因为如果项目很大的话，每次更改代码触发的热更新时间都会很长，所以只在生产环境中使用路由懒加载。
+```JavaScript
+// 生产环境  _import_production.js
+module.exports = file => () => import('@/pages/' + file + '.vue');
+// 开发环境 _import_development.js
+module.exports = file => require('@/pages/' + file + '.vue').default; // vue-loader at least v13.0.0+
+// router.js中引用
+const _import = require('./_import_' + process.env.NODE_ENV);
+{
+    path: 'course',
+    component: _import('course/index'),
+    name: 'course'
+}
+```
+### 图片懒加载(vue-lazyload)
+```JavaScript
+// 安装
+npm install vue-lazyload --save-dev
+// 使用 main.js
+import Vue from 'vue'
+import App from './App.vue'
+import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueLazyload)
+Vue.use(VueLazyload, {
+    preLoad: 1.8,
+    error: require('@/assets/lazy/error.png'),
+    loading: require('@/assets/lazy/loading.png'),
+    attempt: 1,
+    listenEvents: ['scroll']
+});
+
+new Vue({
+  el: 'body',
+  components: {
+    App
+  }
+});
+// 在使用图片的地方加上v-lazy即可
+<img v-lazy="img.src" >
+```
+更多使用方式可参考[vue-lazyload](https://github.com/hilongjw/vue-lazyload)
+这里呈现的效果就是，请求完成数据，再去请求阿里云存放的图片，这个阶段中，图片资源加载过程中，显示loading的状态，加载完毕，显示图片，如果图片加载失败，显示失败的图片。
+### Promise
+&nbsp;&nbsp;回到我们最初的问题，课程首页的请求数为8，请求都为异步请求，而我们的浏览器对同一域下的请求数量是有限制的，超过限制数目的请求会被阻塞，以谷歌浏览器的6个并发请求量为例，课程首页的数据请求和图片请求加起来成百上千个，上面，我们对图片请求已经做了处理，使用懒加载的方式，另外，放在和数据请求不同的域下，我们需要考虑的就是数据请求，目前为8个，我做过这样的测试，如果同时发出的话，每个请求的时间大概是50ms，当每次单独发送一个请求的时候，每个请求的请求时间大约十几毫秒，所以我当时的解决方案就是使用setTimeOut，进行延迟请求，这样做的话，我需要单独测试每个请求的时间，然后为他们写延迟时间，这样效率是很低的。此外，跟promise比，setTimeOut的执行优先级会降低，后来采用了promise的方式，如下：
+```JavaScript
+return new Promise((resolve,reject) => {
+
+})
+```
+采用这种方式的另一个原因是，如果所有异步请求同时触发的话，浏览器会为他们分配执行的优先级，而采用这种方式，请求的顺序会按照我们调用的顺序执行。而浏览器分配的话，可能页面底部的请求会先执行。在请求较少的情况下，这种差异是体现的不明显。
+
+提到promise，我觉得最大的好处就是如它设计的初衷那样，解决了层层回调的问题（难以维护，且不优雅）--链式调用，还有Promise.all()的用法，对于组合数据很方便。
+
+### 浏览器缓存(localStorage)
+对于不频繁修改的数据做了缓存，并且根据变换频率，缓存时间不同。
+```JavaScript
+if (cacheTime < 0) cacheTime = 3600000;
+var result = { data: response.data, expiration: new Date().getTime() + cacheTime };
+localStorage.setItem(cacheName, JSON.stringify(result));
+```
+详细的缓存方法，已上传至github：[前往查看](https://github.com/rainydayDY/cacheRequest/blob/master/index.js)
+
+### PageSpeed Tools
+&nbsp;&nbsp;这个工具可以在谷歌的插件商店中下载，很好用，能列出所有需要优化的点。
+本地所提示的图片问题，如使用浏览器缓存，需要在服务器设置etag和expire time
+。
+&nbsp;&nbsp;测试加载的时间可以用
+```JavaScript
+console.time('加载时间');
+console.timeEnd('加载时间');
+```
+参考文章：
+1. [网站性能优化实战——从12.67s到1.06s的故事](https://juejin.im/post/5b0b7d74518825158e173a0c)
+2. [Event Loop浅谈](https://mp.weixin.qq.com/s/3pX-qNO_dC6ijG3bXKzROg)
+3. [JavaScript 工作原理之十一－渲染引擎及性能优化小技巧](https://juejin.im/post/5b25e083e51d4558b27774b6)
+4. [基于Vue的SPA如何优化页面加载速度](https://juejin.im/post/5b1cf576f265da6e4e436d54)
+5. [为vue项目添加骨架屏](https://xiaoiver.github.io/coding/2017/07/30/%E4%B8%BAvue%E9%A1%B9%E7%9B%AE%E6%B7%BB%E5%8A%A0%E9%AA%A8%E6%9E%B6%E5%B1%8F.html)
+6. [浏览器允许的并发请求资源数是有限制的-分析](https://blog.csdn.net/yishouwangnian/article/details/52788626)
+7. [变态的静态资源缓存与更新 ](https://div.io/topic/745)
